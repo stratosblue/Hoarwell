@@ -1,0 +1,94 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33122.133
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "benchmark", "benchmark", "{8EBE09D3-262D-41C7-AB7D-61A197A811F8}"
+	ProjectSection(SolutionItems) = preProject
+		benchmark\README.md = benchmark\README.md
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hoarwell.Benchmark", "benchmark\Hoarwell.Benchmark\Hoarwell.Benchmark.csproj", "{BF260F6C-30FC-4CF8-9AE9-DC7C87972EA9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{91194FEE-D3C6-46CF-AACA-D4140417B585}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hoarwell", "src\Hoarwell\Hoarwell.csproj", "{C20FF49E-E3B3-4FDF-8C86-863F5B032DAB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{260BCD7B-742E-428E-9DAD-5CA83EB3D306}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hoarwell.Test", "test\Hoarwell.Test\Hoarwell.Test.csproj", "{D3A2DE29-E343-4752-8F78-08B427B4B3B6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solution items", "solution items", "{07D4524D-19D0-4AA4-916E-829CAE401A7F}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitignore = .gitignore
+		CodeMaid.config = CodeMaid.config
+		Directory.Build.props = Directory.Build.props
+		LICENSE.txt = LICENSE.txt
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hoarwell.Transport.AspNetCore", "src\Hoarwell.Transport.AspNetCore\Hoarwell.Transport.AspNetCore.csproj", "{86F05D83-A246-4351-A416-91BA8845335A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{4CA35242-60CD-4E49-9942-B680EA0B4681}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ChatRoom", "ChatRoom", "{905BFE04-64E8-406A-880D-F575A0F2B0DA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatRoom.Client", "samples\ChatRoom\ChatRoom.Client\ChatRoom.Client.csproj", "{3B02ABC4-42A8-4781-BD75-CCC79B74F023}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatRoom.Server", "samples\ChatRoom\ChatRoom.Server\ChatRoom.Server.csproj", "{74C8D128-1C43-47CF-B69D-B64D94942375}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatRoom.Shared", "samples\ChatRoom\ChatRoom.Shared\ChatRoom.Shared.csproj", "{AD46DA9D-2CCD-4ACA-BCA6-1B97D742B439}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BF260F6C-30FC-4CF8-9AE9-DC7C87972EA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF260F6C-30FC-4CF8-9AE9-DC7C87972EA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF260F6C-30FC-4CF8-9AE9-DC7C87972EA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF260F6C-30FC-4CF8-9AE9-DC7C87972EA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C20FF49E-E3B3-4FDF-8C86-863F5B032DAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C20FF49E-E3B3-4FDF-8C86-863F5B032DAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C20FF49E-E3B3-4FDF-8C86-863F5B032DAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C20FF49E-E3B3-4FDF-8C86-863F5B032DAB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3A2DE29-E343-4752-8F78-08B427B4B3B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3A2DE29-E343-4752-8F78-08B427B4B3B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3A2DE29-E343-4752-8F78-08B427B4B3B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3A2DE29-E343-4752-8F78-08B427B4B3B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{86F05D83-A246-4351-A416-91BA8845335A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86F05D83-A246-4351-A416-91BA8845335A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86F05D83-A246-4351-A416-91BA8845335A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86F05D83-A246-4351-A416-91BA8845335A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B02ABC4-42A8-4781-BD75-CCC79B74F023}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B02ABC4-42A8-4781-BD75-CCC79B74F023}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B02ABC4-42A8-4781-BD75-CCC79B74F023}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B02ABC4-42A8-4781-BD75-CCC79B74F023}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74C8D128-1C43-47CF-B69D-B64D94942375}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74C8D128-1C43-47CF-B69D-B64D94942375}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74C8D128-1C43-47CF-B69D-B64D94942375}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74C8D128-1C43-47CF-B69D-B64D94942375}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD46DA9D-2CCD-4ACA-BCA6-1B97D742B439}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD46DA9D-2CCD-4ACA-BCA6-1B97D742B439}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD46DA9D-2CCD-4ACA-BCA6-1B97D742B439}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD46DA9D-2CCD-4ACA-BCA6-1B97D742B439}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BF260F6C-30FC-4CF8-9AE9-DC7C87972EA9} = {8EBE09D3-262D-41C7-AB7D-61A197A811F8}
+		{C20FF49E-E3B3-4FDF-8C86-863F5B032DAB} = {91194FEE-D3C6-46CF-AACA-D4140417B585}
+		{D3A2DE29-E343-4752-8F78-08B427B4B3B6} = {260BCD7B-742E-428E-9DAD-5CA83EB3D306}
+		{86F05D83-A246-4351-A416-91BA8845335A} = {91194FEE-D3C6-46CF-AACA-D4140417B585}
+		{905BFE04-64E8-406A-880D-F575A0F2B0DA} = {4CA35242-60CD-4E49-9942-B680EA0B4681}
+		{3B02ABC4-42A8-4781-BD75-CCC79B74F023} = {905BFE04-64E8-406A-880D-F575A0F2B0DA}
+		{74C8D128-1C43-47CF-B69D-B64D94942375} = {905BFE04-64E8-406A-880D-F575A0F2B0DA}
+		{AD46DA9D-2CCD-4ACA-BCA6-1B97D742B439} = {905BFE04-64E8-406A-880D-F575A0F2B0DA}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {a14ebf63-97f0-4aa2-adcc-341e1cae6b1d}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFrameworks>net8.0</TargetFrameworks>
+
+    <Nullable>disable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" Version="*" />
+
+    <PackageReference Include="DotNetty.Common" Version="0.7.5" />
+    <PackageReference Include="DotNetty.Codecs" Version="0.7.5" />
+    <PackageReference Include="DotNetty.Handlers" Version="0.7.5" />
+    <PackageReference Include="DotNetty.Transport.Libuv" Version="0.7.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Hoarwell.Transport.AspNetCore\Hoarwell.Transport.AspNetCore.csproj" />
+    <ProjectReference Include="..\..\src\Hoarwell\Hoarwell.csproj" />
+  </ItemGroup>
+</Project>
