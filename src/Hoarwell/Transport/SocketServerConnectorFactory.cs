@@ -58,6 +58,8 @@ public class SocketServerConnectorFactory : IDuplexPipeConnectorFactory<Stream, 
 
             try
             {
+                socket.Bind(endPoint);
+
                 //TODO backlog optionable
                 socket.Listen(int.MaxValue);
             }
