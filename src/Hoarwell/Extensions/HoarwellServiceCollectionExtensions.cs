@@ -93,6 +93,17 @@ public static class HoarwellServiceCollectionExtensions
         return builder.UseApplication<HoarwellContext, DefaultHoarwellApplication<PipeReader, PipeWriter>, PipeReader, PipeWriter>(lifetime);
     }
 
+    /// <summary>
+    /// 使用默认应用程序 <see cref="DefaultHoarwellApplication{TInputter, TOutputter}"/>
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <param name="lifetime"></param>
+    /// <returns></returns>
+    public static HoarwellBuilder<HoarwellContext, Stream, Stream> UseDefaultStreamApplication(this HoarwellBuilder builder, ServiceLifetime lifetime = ServiceLifetime.Singleton)
+    {
+        return builder.UseApplication<HoarwellContext, DefaultHoarwellApplication<Stream, Stream>, Stream, Stream>(lifetime);
+    }
+
     #endregion Application
 
     #region Inbound

@@ -17,7 +17,7 @@ public class SocketTransportFactoryServerConnectorFactory : IDuplexPipeConnector
 
     private readonly IConnectionListenerFactory _connectionListenerFactory;
 
-    private readonly IList<EndPoint> _endPoints;
+    private readonly IReadOnlyList<EndPoint> _endPoints;
 
     #endregion Private 字段
 
@@ -40,7 +40,7 @@ public class SocketTransportFactoryServerConnectorFactory : IDuplexPipeConnector
             throw new ArgumentException($"{nameof(IDuplexPipeConnectorFactory<PipeReader, PipeWriter>)} requires at least one endpoint in {nameof(HoarwellEndPointOptions)}.");
         }
 
-        _endPoints = endPoints;
+        _endPoints = endPoints.ToArray();
     }
 
     #endregion Public 构造函数

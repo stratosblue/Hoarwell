@@ -5,7 +5,7 @@
 /// </summary>
 /// <typeparam name="TInputter"></typeparam>
 /// <typeparam name="TOutputter"></typeparam>
-public interface IDuplexPipeFeature<TInputter, TOutputter>
+public interface IDuplexPipeFeature<out TInputter, out TOutputter>
 {
     #region Public 属性
 

@@ -8,7 +8,7 @@ namespace Hoarwell;
 /// </summary>
 /// <typeparam name="TInputter">输入器类型</typeparam>
 /// <typeparam name="TOutputter">输出器类型</typeparam>
-public interface IDuplexPipeContext<TInputter, TOutputter>
+public interface IDuplexPipeContext<out TInputter, out TOutputter>
     : IDuplexPipeFeature<TInputter, TOutputter>, IPipeLifetimeFeature, IAsyncDisposable
 {
     #region Public 属性

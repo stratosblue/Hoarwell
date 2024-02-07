@@ -13,8 +13,7 @@ namespace Microsoft.Extensions.DependencyInjection;
 /// Hoarwell 默认 socket 传输客户端拓展
 /// </summary>
 [EditorBrowsable(EditorBrowsableState.Never)]
-public static class HoarwellDefaultSocketTransportClientServiceCollectionExtensions
-
+public static class DefaultSocketTransportClientDIExtensions
 {
     #region Public 方法
 
