@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace Hoarwell.Client;
+namespace Hoarwell.Extensions;
 
 /// <summary>
 /// 上下文等待者，从 <see cref="IHoarwellApplicationRunner"/> 中等待第一个激活上下文（通常需要在 <see cref="IHoarwellApplicationRunner.StartAsync(CancellationToken)"/> 之前获取）

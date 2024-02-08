@@ -2,17 +2,17 @@
 using System.Net.Sockets;
 using Hoarwell.Options;
 
-namespace Hoarwell.Client;
+namespace Hoarwell.Transport;
 
 /// <summary>
-/// 基于 <see cref="Socket"/> 的 <inheritdoc cref="SingletonDuplexPipeConnector{TInputter, TOutputter}"/>
+/// 基于 <see cref="Socket"/> 的 <inheritdoc cref="SingleConnectionDuplexPipeConnector{TInputter, TOutputter}"/>
 /// </summary>
 /// <typeparam name="TInputter"></typeparam>
 /// <typeparam name="TOutputter"></typeparam>
 /// <param name="remoteEndPoint"></param>
 /// <param name="options"></param>
 public abstract class SingletonSocketBaseDuplexPipeConnector<TInputter, TOutputter>(EndPoint remoteEndPoint, SocketCreateOptions options)
-    : SingletonDuplexPipeConnector<TInputter, TOutputter>
+    : SingleConnectionDuplexPipeConnector<TInputter, TOutputter>
 {
     #region Protected 字段
 

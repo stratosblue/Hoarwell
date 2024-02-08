@@ -40,6 +40,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatRoom.Server", "samples\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatRoom.Shared", "samples\ChatRoom\ChatRoom.Shared\ChatRoom.Shared.csproj", "{AD46DA9D-2CCD-4ACA-BCA6-1B97D742B439}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ChatRoomOverHttp", "ChatRoomOverHttp", "{E739DA31-C3B4-4795-A3F8-D22EC1F89088}"
+	ProjectSection(SolutionItems) = preProject
+		samples\ChatRoomOverHttp\README.md = samples\ChatRoomOverHttp\README.md
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatRoomOverHttp.Server", "samples\ChatRoomOverHttp\ChatRoomOverHttp.Server\ChatRoomOverHttp.Server.csproj", "{FA25174B-5C89-4E17-9559-16D5ED2CD4A3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatRoomOverHttp.Client", "samples\ChatRoomOverHttp\ChatRoomOverHttp.Client\ChatRoomOverHttp.Client.csproj", "{55DA393C-3EB2-4374-93D4-88E6865FDACE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -74,6 +83,14 @@ Global
 		{AD46DA9D-2CCD-4ACA-BCA6-1B97D742B439}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AD46DA9D-2CCD-4ACA-BCA6-1B97D742B439}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AD46DA9D-2CCD-4ACA-BCA6-1B97D742B439}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA25174B-5C89-4E17-9559-16D5ED2CD4A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA25174B-5C89-4E17-9559-16D5ED2CD4A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA25174B-5C89-4E17-9559-16D5ED2CD4A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA25174B-5C89-4E17-9559-16D5ED2CD4A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55DA393C-3EB2-4374-93D4-88E6865FDACE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55DA393C-3EB2-4374-93D4-88E6865FDACE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55DA393C-3EB2-4374-93D4-88E6865FDACE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55DA393C-3EB2-4374-93D4-88E6865FDACE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -87,6 +104,9 @@ Global
 		{3B02ABC4-42A8-4781-BD75-CCC79B74F023} = {905BFE04-64E8-406A-880D-F575A0F2B0DA}
 		{74C8D128-1C43-47CF-B69D-B64D94942375} = {905BFE04-64E8-406A-880D-F575A0F2B0DA}
 		{AD46DA9D-2CCD-4ACA-BCA6-1B97D742B439} = {905BFE04-64E8-406A-880D-F575A0F2B0DA}
+		{E739DA31-C3B4-4795-A3F8-D22EC1F89088} = {4CA35242-60CD-4E49-9942-B680EA0B4681}
+		{FA25174B-5C89-4E17-9559-16D5ED2CD4A3} = {E739DA31-C3B4-4795-A3F8-D22EC1F89088}
+		{55DA393C-3EB2-4374-93D4-88E6865FDACE} = {E739DA31-C3B4-4795-A3F8-D22EC1F89088}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {a14ebf63-97f0-4aa2-adcc-341e1cae6b1d}

@@ -1,5 +1,5 @@
 ﻿using System.Net;
-using Hoarwell.Client;
+using Hoarwell.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 

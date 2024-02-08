@@ -8,7 +8,7 @@ a network application framework for rapid development of maintainable protocol s
 
 ### Features
 
-- 框架基于抽象的`Inputter`、`Outputter`，可以运行在任意可抽象的传输层之上，而不局限于`Socket`，例如：`NamedPipe`、`Http`等；
+- 框架基于抽象的`Inputter`、`Outputter`，可以运行在任意可抽象的传输层之上，而不局限于`Socket`，例如：`NamedPipe`、`Http`等（参见示例项目 [ChatRoomOverHttp](./samples/ChatRoomOverHttp)）；
 - 基于 `管道` 的处理模型，可灵活组装、拓展；
 - `处理管道` 借鉴了部分 `Netty`/`DotNetty`，但与其不同：
     - 入站(`Inbound`)与出站(`Outbound`)管道已拆分配置，不在混淆在一起配置；
@@ -33,6 +33,16 @@ a network application framework for rapid development of maintainable protocol s
     - `客户端出站`编码管道对应`服务端入站`解码管道
     - `客户端入站`解码管道对应`服务端出站`编码管道
  - 框架已提供保障基础运行的默认组件，配置过程中的各个组件都可以自行实现来替代默认实现
+
+### 引用包
+```xml
+<ItemGroup>
+  <PackageReference Include="Hoarwell" Version="*-*" />
+
+  <!--基于 AspNetCore 的 SocketTransportFactory 的服务端实现-->
+  <!--<PackageReference Include="Hoarwell.Transport.AspNetCore" Version="*-*" />-->
+</ItemGroup>
+```
 
 ### 3.2 消息及消息处理器
 ```C#
@@ -167,6 +177,7 @@ var context = await contextWaiter.Task; //获取客户端上下文
 ## 4. Samples
 
 [ChatRoom](./samples/ChatRoom): 简单的聊天室实现
+[ChatRoomOverHttp](./samples/ChatRoomOverHttp): 简单的聊天室实现，并运行于 `Http` 协议之上
 
 ## 5. Benchmark
 

@@ -1,6 +1,7 @@
 ﻿using System.IO.Pipelines;
 using System.Net;
 using Hoarwell.Options;
+using Hoarwell.Transport;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
@@ -29,9 +30,10 @@ internal class DefaultSocketPipeClientConnectorFactory
 
     #region Protected 方法
 
-    protected override IDuplexPipeConnector<PipeReader, PipeWriter> CreateConnector(EndPoint endPoint)
+    protected override ValueTask<IDuplexPipeConnector<PipeReader, PipeWriter>> CreateConnectorAsync(EndPoint endPoint, CancellationToken cancellationToken)
     {
-        return new DefaultSocketPipeClientConnector(endPoint, _socketCreateOptions);
+        var connector = new DefaultSocketPipeClientConnector(endPoint, _socketCreateOptions);
+        return new ValueTask<IDuplexPipeConnector<PipeReader, PipeWriter>>(connector);
     }
 
     #endregion Protected 方法

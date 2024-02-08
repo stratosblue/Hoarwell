@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using Hoarwell.Options;
+using Hoarwell.Transport;
 
 namespace Hoarwell.Client;
 

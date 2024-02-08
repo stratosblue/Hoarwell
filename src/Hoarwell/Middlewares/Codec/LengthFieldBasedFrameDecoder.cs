@@ -60,6 +60,12 @@ public class LengthFieldBasedFrameDecoder<TContext>
 
                 totalLength = ReadLength(buffer.Slice(0, FrameHeaderSize));
 
+                if (totalLength == FrameHeaderSize)   //HACK 允许长度为0的帧是否不科学
+                {
+                    pipeReader.AdvanceTo(buffer.GetPosition(FrameHeaderSize));
+                    continue;
+                }
+
                 totalLengthNotComputedYet = false;
             }
 

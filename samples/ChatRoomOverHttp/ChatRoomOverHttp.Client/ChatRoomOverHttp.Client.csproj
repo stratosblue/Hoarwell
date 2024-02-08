@@ -5,12 +5,18 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+
+    <DefineConstants>$(DefineConstants);OVER_HTTP</DefineConstants>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\ChatRoom\ChatRoom.Client\*.cs" Link="%(Filename).cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
 
-    <ProjectReference Include="..\ChatRoom.Shared\ChatRoom.Shared.csproj" />
+    <ProjectReference Include="..\..\ChatRoom\ChatRoom.Shared\ChatRoom.Shared.csproj" />
   </ItemGroup>
 
 </Project>

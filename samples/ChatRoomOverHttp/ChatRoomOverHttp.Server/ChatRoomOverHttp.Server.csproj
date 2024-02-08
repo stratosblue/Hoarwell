@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <DefineConstants>$(DefineConstants);OVER_HTTP</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\ChatRoom\ChatRoom.Server\*.cs" Link="%(Filename).cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+
+    <ProjectReference Include="..\..\..\src\Hoarwell.Transport.AspNetCore\Hoarwell.Transport.AspNetCore.csproj" />
+    <ProjectReference Include="..\..\ChatRoom\ChatRoom.Shared\ChatRoom.Shared.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -2,7 +2,7 @@
 using Chat.Shared;
 using ChatRoom.Client;
 using Hoarwell;
-using Hoarwell.Client;
+using Hoarwell.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 
 var endPoint = new IPEndPoint(IPAddress.Loopback, 12468);
@@ -10,8 +10,12 @@ var endPoint = new IPEndPoint(IPAddress.Loopback, 12468);
 var services = new ServiceCollection();
 
 services.AddHoarwell("Client")
-        .UseDefaultApplication()
+        .UseDefaultStreamApplication()
+#if OVER_HTTP
+        .UseHttpBaseTransportClient(options => options.EndPoints.Add(new ChatRoomOverHttp.Client.Transport.HttpEndPoint($"http://{endPoint}/ChatRoom")))
+#else
         .UseDefaultSocketTransportClient(options => options.EndPoints.Add(endPoint))
+#endif
         .UseDefaultSerializer(serializerBuilder =>
         {
             serializerBuilder.AddMessage<ChatPacket>();
@@ -24,7 +28,8 @@ services.AddHoarwell("Client")
         })
         .ConfigureInboundPipeline(pipelineBuilder =>
         {
-            pipelineBuilder.UseUInt32LengthFieldBasedFrameDecoder()
+            pipelineBuilder.UsePipeReaderAdaptMiddleware()
+                           .UseUInt32LengthFieldBasedFrameDecoder()
                            .UseDefaultMessageDeserializer()
                            .RunEndpoint(endpointBuilder =>
                            {

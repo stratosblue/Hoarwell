@@ -1,13 +1,14 @@
 ﻿using Microsoft.AspNetCore.Http.Features;
 
-namespace Hoarwell.Client;
+namespace Hoarwell.Transport;
 
 /// <summary>
-/// 单例 <inheritdoc cref="IDuplexPipeConnector{TInputter, TOutputter}"/>, 仅进行一次连接
+/// 单次连接的 <inheritdoc cref="IDuplexPipeConnector{TInputter, TOutputter}"/><br/>
+/// 仅进行一次连接，并阻塞 <see cref="ConnectAsync(CancellationToken)"/> 方法
 /// </summary>
 /// <typeparam name="TInputter"></typeparam>
 /// <typeparam name="TOutputter"></typeparam>
-public abstract class SingletonDuplexPipeConnector<TInputter, TOutputter>
+public abstract class SingleConnectionDuplexPipeConnector<TInputter, TOutputter>
     : IDuplexPipeConnector<TInputter, TOutputter>, IDisposable
 {
     #region Private 字段
@@ -16,7 +17,7 @@ public abstract class SingletonDuplexPipeConnector<TInputter, TOutputter>
 
     private TaskCompletionSource<IDuplexPipeContext<TInputter, TOutputter>>? _completionSource;
 
-    private bool _isDisposed;
+    private int _isDisposed = 0;
 
     #endregion Private 字段
 
@@ -32,6 +33,8 @@ public abstract class SingletonDuplexPipeConnector<TInputter, TOutputter>
     /// <inheritdoc/>
     public virtual async ValueTask<IDuplexPipeContext<TInputter, TOutputter>> ConnectAsync(CancellationToken cancellationToken = default)
     {
+        ThrowIfDisposed();
+
         var newCompletionSource = new TaskCompletionSource<IDuplexPipeContext<TInputter, TOutputter>>();
         if (Interlocked.CompareExchange(ref _completionSource, newCompletionSource, null) is { } completionSource)
         {
@@ -41,7 +44,7 @@ public abstract class SingletonDuplexPipeConnector<TInputter, TOutputter>
             await Task.Delay(Timeout.Infinite, _blockTokenSource.Token).ConfigureAwait(false);
 
             //不会运行到这里的
-            throw new InvalidOperationException($"{GetType()} block context running error");
+            throw new InvalidOperationException($"{GetType()} block connect running error");
         }
         _ = Task.Run(async () =>
         {
@@ -70,6 +73,8 @@ public abstract class SingletonDuplexPipeConnector<TInputter, TOutputter>
     /// <inheritdoc/>
     public virtual ValueTask StopAsync(CancellationToken cancellationToken = default)
     {
+        ThrowIfDisposed();
+
         _blockTokenSource.SilenceRelease();
         return default;
     }
@@ -85,6 +90,14 @@ public abstract class SingletonDuplexPipeConnector<TInputter, TOutputter>
     /// <returns></returns>
     protected abstract Task<IDuplexPipeContext<TInputter, TOutputter>> InternalConnectAsync(CancellationToken cancellationToken);
 
+    /// <summary>
+    /// 对象已处置时抛出异常
+    /// </summary>
+    protected void ThrowIfDisposed()
+    {
+        ObjectDisposedExceptionHelper.ThrowIf(_isDisposed == 1, this);
+    }
+
     #endregion Protected 方法
 
     #region IDisposable
@@ -92,7 +105,7 @@ public abstract class SingletonDuplexPipeConnector<TInputter, TOutputter>
     /// <summary>
     ///
     /// </summary>
-    ~SingletonDuplexPipeConnector()
+    ~SingleConnectionDuplexPipeConnector()
     {
         Dispose(disposing: false);
     }
@@ -110,10 +123,9 @@ public abstract class SingletonDuplexPipeConnector<TInputter, TOutputter>
     /// <param name="disposing"></param>
     protected virtual void Dispose(bool disposing)
     {
-        if (!_isDisposed)
+        if (Interlocked.CompareExchange(ref _isDisposed, 1, 0) == 1)
         {
             _blockTokenSource.Dispose();
-            _isDisposed = true;
         }
     }
 

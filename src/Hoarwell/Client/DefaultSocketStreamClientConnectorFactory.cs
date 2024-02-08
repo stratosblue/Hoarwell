@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using Hoarwell.Options;
+using Hoarwell.Transport;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
@@ -28,9 +29,10 @@ internal class DefaultSocketStreamClientConnectorFactory
 
     #region Protected 方法
 
-    protected override IDuplexPipeConnector<Stream, Stream> CreateConnector(EndPoint endPoint)
+    protected override ValueTask<IDuplexPipeConnector<Stream, Stream>> CreateConnectorAsync(EndPoint endPoint, CancellationToken cancellationToken)
     {
-        return new DefaultSocketStreamClientConnector(endPoint, _socketCreateOptions);
+        var connector = new DefaultSocketStreamClientConnector(endPoint, _socketCreateOptions);
+        return new ValueTask<IDuplexPipeConnector<Stream, Stream>>(connector);
     }
 
     #endregion Protected 方法
