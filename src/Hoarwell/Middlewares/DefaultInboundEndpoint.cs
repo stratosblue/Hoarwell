@@ -22,6 +22,8 @@ internal sealed class DefaultInboundEndpoint<TContext>
 
     private readonly HoarwellOptions _options;
 
+    private readonly HandleInboundMessageDelegate? _unhandledCatchDelegate;
+
     #endregion Private 字段
 
     #region Public 构造函数
@@ -38,6 +40,8 @@ internal sealed class DefaultInboundEndpoint<TContext>
 
         _handleInboundMessageDelegateMap = messageHandleOptionsMonitor.GetRequiredApplicationOptions(applicationName, options => options.HandleInboundMessageDelegateMap)
                                                                       .ToFrozenDictionary();
+
+        _unhandledCatchDelegate = messageHandleOptionsMonitor.Get(applicationName)?.UnhandledCatchDelegate;
 
         _options = optionsMonitor.Get(applicationName);
 
@@ -68,11 +72,21 @@ internal sealed class DefaultInboundEndpoint<TContext>
     {
         try
         {
-            await _handleInboundMessageDelegateMap[input.ValueType](context, input).ConfigureAwait(false);
+            if (_handleInboundMessageDelegateMap.TryGetValue(input.ValueType, out var inboundMessageDelegate))
+            {
+                await inboundMessageDelegate(context, input).ConfigureAwait(false);
+                return;
+            }
+            else if (_unhandledCatchDelegate is not null)
+            {
+                await _unhandledCatchDelegate(context, input).ConfigureAwait(false);
+                return;
+            }
+            throw new MessageHandlerNotFoundException(input.Value, input.ValueType);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An error occurred while processing the message");
+            _logger.LogError(ex, "An error occurred while processing the message {Message}", input.Value);
 
             if (_closePipeOnMessageHandleException)
             {

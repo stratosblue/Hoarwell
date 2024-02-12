@@ -2,6 +2,7 @@
 using Hoarwell.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
 
 namespace Hoarwell;
 
@@ -94,7 +95,7 @@ public class CommunicationUint32FrameCodecBaseTest
                                    .RunDefaultMessageSerializer();
                 });
 
-        services.AddLogging();
+        services.AddLogging(m => m.AddConsole());
 
         var serviceProvider = services.BuildServiceProvider(new ServiceProviderOptions() { ValidateOnBuild = true, ValidateScopes = true });
         var applicationRunner = serviceProvider.GetRequiredKeyedService<IHoarwellApplicationRunner>("Client");
@@ -141,7 +142,7 @@ public class CommunicationUint32FrameCodecBaseTest
                                    .RunDefaultMessageSerializer();
                 });
 
-        services.AddLogging();
+        services.AddLogging(m => m.AddConsole());
 
         var serviceProvider = services.BuildServiceProvider(new ServiceProviderOptions() { ValidateOnBuild = true, ValidateScopes = true });
         var applicationRunner = serviceProvider.GetRequiredKeyedService<IHoarwellApplicationRunner>("Server");

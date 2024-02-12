@@ -26,6 +26,8 @@ public class HoarwellEndpointBuilder<TContext>
 
     internal Dictionary<Type, HandleInboundMessageDelegate> HandleInboundMessageDelegateMap { get; } = [];
 
+    internal HandleInboundMessageDelegate? UnhandledCatchDelegate { get; private set; }
+
     #endregion Internal 属性
 
     #region Public 构造函数
@@ -49,11 +51,13 @@ public class HoarwellEndpointBuilder<TContext>
     public void Build(IServiceCollection services)
     {
         var handleInboundMessageDelegateMap = HandleInboundMessageDelegateMap;
+        var unhandledCatchDelegate = UnhandledCatchDelegate;
 
         services.AddOptions<DefaultInboundMessageHandleOptions>(HoarwellBuilder.ApplicationName)
                 .Configure(options =>
                 {
                     options.HandleInboundMessageDelegateMap = handleInboundMessageDelegateMap;
+                    options.UnhandledCatchDelegate = unhandledCatchDelegate;
                 });
     }
 
@@ -87,6 +91,39 @@ public class HoarwellEndpointBuilder<TContext>
         HandleInboundMessageDelegateMap.Add(typeof(TMessage), [DebuggerStepThrough][StackTraceHidden] (IHoarwellContext context, InboundMetadata input) => handelr.HandleAsync(context, (TMessage?)input.Value));
         return this;
     }
+
+    #region Unhandled
+
+    /// <summary>
+    /// 使用处理器 <typeparamref name="TMessageHandelr"/> 捕获所有未处理的消息
+    /// </summary>
+    /// <typeparam name="TMessageHandelr"></typeparam>
+    /// <param name="lifetime"></param>
+    /// <returns></returns>
+    public HoarwellEndpointBuilder<TContext> CatchUnhandled<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TMessageHandelr>(ServiceLifetime lifetime = ServiceLifetime.Scoped)
+        where TMessageHandelr : IEndpointMessageHandler<object>
+    {
+        UnhandledCatchDelegate = EndpointMessageHandleHelper.HandleMessageAsync<object, TMessageHandelr>;
+        HoarwellBuilder.Services.TryAdd(ServiceDescriptor.DescribeKeyed(typeof(TMessageHandelr), HoarwellBuilder.ApplicationName, typeof(TMessageHandelr), lifetime));
+        return this;
+    }
+
+    /// <summary>
+    /// 使用处理器 <paramref name="handelr"/> 捕获所有未处理的消息
+    /// </summary>
+    /// <typeparam name="TMessageHandelr"></typeparam>
+    /// <param name="handelr"></param>
+    /// <returns></returns>
+    public HoarwellEndpointBuilder<TContext> CatchUnhandled<TMessageHandelr>(TMessageHandelr handelr)
+        where TMessageHandelr : IEndpointMessageHandler<object>
+    {
+        ArgumentNullExceptionHelper.ThrowIfNull(handelr, nameof(handelr));
+
+        UnhandledCatchDelegate = [DebuggerStepThrough][StackTraceHidden] (IHoarwellContext context, InboundMetadata input) => handelr.HandleAsync(context, input.Value);
+        return this;
+    }
+
+    #endregion Unhandled
 
     #endregion Public 方法
 }

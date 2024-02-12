@@ -6,5 +6,7 @@ internal sealed class DefaultInboundMessageHandleOptions
 
     public Dictionary<Type, HandleInboundMessageDelegate>? HandleInboundMessageDelegateMap { get; set; }
 
+    public HandleInboundMessageDelegate? UnhandledCatchDelegate { get; set; }
+
     #endregion Public 属性
 }
