@@ -9,9 +9,7 @@ namespace Hoarwell.Build;
 /// <summary>
 /// Hoarwell 终结点构建器
 /// </summary>
-/// <typeparam name="TContext"></typeparam>
-public class HoarwellEndpointBuilder<TContext>
-    where TContext : IHoarwellContext
+public class HoarwellEndpointBuilder
 {
     #region Public 属性
 
@@ -32,7 +30,7 @@ public class HoarwellEndpointBuilder<TContext>
 
     #region Public 构造函数
 
-    /// <inheritdoc cref="HoarwellEndpointBuilder{TContext}"/>
+    /// <inheritdoc cref="HoarwellEndpointBuilder"/>
     public HoarwellEndpointBuilder(HoarwellBuilder hoarwellBuilder)
     {
         ArgumentNullExceptionHelper.ThrowIfNull(hoarwellBuilder);
@@ -68,7 +66,7 @@ public class HoarwellEndpointBuilder<TContext>
     /// <typeparam name="TMessageHandelr"></typeparam>
     /// <param name="lifetime"></param>
     /// <returns></returns>
-    public HoarwellEndpointBuilder<TContext> Handle<TMessage, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TMessageHandelr>(ServiceLifetime lifetime = ServiceLifetime.Scoped)
+    public HoarwellEndpointBuilder Handle<TMessage, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TMessageHandelr>(ServiceLifetime lifetime = ServiceLifetime.Scoped)
         where TMessageHandelr : IEndpointMessageHandler<TMessage>
     {
         HandleInboundMessageDelegateMap.Add(typeof(TMessage), EndpointMessageHandleHelper.HandleMessageAsync<TMessage, TMessageHandelr>);
@@ -83,7 +81,7 @@ public class HoarwellEndpointBuilder<TContext>
     /// <typeparam name="TMessageHandelr"></typeparam>
     /// <param name="handelr"></param>
     /// <returns></returns>
-    public HoarwellEndpointBuilder<TContext> Handle<TMessage, TMessageHandelr>(TMessageHandelr handelr)
+    public HoarwellEndpointBuilder Handle<TMessage, TMessageHandelr>(TMessageHandelr handelr)
         where TMessageHandelr : IEndpointMessageHandler<TMessage>
     {
         ArgumentNullExceptionHelper.ThrowIfNull(handelr, nameof(handelr));
@@ -100,7 +98,7 @@ public class HoarwellEndpointBuilder<TContext>
     /// <typeparam name="TMessageHandelr"></typeparam>
     /// <param name="lifetime"></param>
     /// <returns></returns>
-    public HoarwellEndpointBuilder<TContext> CatchUnhandled<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TMessageHandelr>(ServiceLifetime lifetime = ServiceLifetime.Scoped)
+    public HoarwellEndpointBuilder CatchUnhandled<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TMessageHandelr>(ServiceLifetime lifetime = ServiceLifetime.Scoped)
         where TMessageHandelr : IEndpointMessageHandler<object>
     {
         UnhandledCatchDelegate = EndpointMessageHandleHelper.HandleMessageAsync<object, TMessageHandelr>;
@@ -114,7 +112,7 @@ public class HoarwellEndpointBuilder<TContext>
     /// <typeparam name="TMessageHandelr"></typeparam>
     /// <param name="handelr"></param>
     /// <returns></returns>
-    public HoarwellEndpointBuilder<TContext> CatchUnhandled<TMessageHandelr>(TMessageHandelr handelr)
+    public HoarwellEndpointBuilder CatchUnhandled<TMessageHandelr>(TMessageHandelr handelr)
         where TMessageHandelr : IEndpointMessageHandler<object>
     {
         ArgumentNullExceptionHelper.ThrowIfNull(handelr, nameof(handelr));

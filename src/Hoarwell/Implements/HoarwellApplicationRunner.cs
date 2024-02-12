@@ -240,6 +240,8 @@ public abstract class HoarwellApplicationRunner<TContext, TApplication, TInputte
     /// <returns></returns>
     protected virtual Task DoStopAsync(CancellationToken cancellationToken)
     {
+        ContextEventChannel.Writer.TryComplete();
+
         return StopConnectorsAsync(_connectors, cancellationToken);
     }
 

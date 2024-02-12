@@ -14,6 +14,15 @@ namespace Hoarwell;
 public delegate Task HandleInboundMessageDelegate(IHoarwellContext context, InboundMetadata input);
 
 /// <summary>
+/// 消息处理委托
+/// </summary>
+/// <typeparam name="TMessage"></typeparam>
+/// <param name="context"></param>
+/// <param name="message"></param>
+/// <returns></returns>
+public delegate Task MessageHandleDelegate<TMessage>(IHoarwellContext context, TMessage? message);
+
+/// <summary>
 /// 消息输出序列化委托
 /// </summary>
 /// <param name="context"></param>

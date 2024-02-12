@@ -144,13 +144,13 @@ public static class HoarwellServiceCollectionExtensions
     /// <param name="chainNode"></param>
     /// <param name="setupAction"></param>
     public static void RunEndpoint<TContext>(this InboundPipelineBuilderChainNode<TContext, InboundMetadata> chainNode,
-                                             Action<HoarwellEndpointBuilder<TContext>> setupAction)
+                                             Action<HoarwellEndpointBuilder> setupAction)
         where TContext : IHoarwellContext
     {
         ArgumentNullExceptionHelper.ThrowIfNull(chainNode);
         ArgumentNullExceptionHelper.ThrowIfNull(setupAction);
 
-        var builder = new HoarwellEndpointBuilder<TContext>(chainNode.HoarwellBuilder);
+        var builder = new HoarwellEndpointBuilder(chainNode.HoarwellBuilder);
 
         setupAction(builder);
 
