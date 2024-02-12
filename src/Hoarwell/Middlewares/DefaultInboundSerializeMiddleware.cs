@@ -1,10 +1,11 @@
 ﻿using System.Buffers;
+using Hoarwell.ExecutionPipeline;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Hoarwell.Middlewares;
 
 internal sealed class DefaultInboundSerializeMiddleware<TContext>
-    : TransformMiddleware<TContext, ReadOnlySequence<byte>, InboundMetadata>
+    : IPipelineMiddleware<TContext, ReadOnlySequence<byte>, InboundMetadata>
     where TContext : IHoarwellContext
 {
     #region Private 字段
@@ -35,7 +36,7 @@ internal sealed class DefaultInboundSerializeMiddleware<TContext>
 
     #region Public 方法
 
-    public override Task<InboundMetadata> InvokeAsync(TContext context, ReadOnlySequence<byte> input)
+    public Task InvokeAsync(TContext context, ReadOnlySequence<byte> input, PipelineInvokeDelegate<TContext, InboundMetadata> next)
     {
         var identifierSequence = input.Slice(0, _identifierLength);
 
@@ -45,7 +46,7 @@ internal sealed class DefaultInboundSerializeMiddleware<TContext>
 
         var value = _serializer.Deserialize(type, input.Slice(_identifierLength));
 
-        return Task.FromResult(new InboundMetadata(value, type));
+        return next(context, new InboundMetadata(value, type));
     }
 
     #endregion Public 方法

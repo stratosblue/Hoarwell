@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Hoarwell.ExecutionPipeline.Internal;
@@ -60,22 +61,29 @@ internal static class PipelineRunHelper
         return pipelineInvokeDelegate;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Task StartPipeline<TContext, TOutput>(TContext context, TOutput input, PipelineInvokeDelegate<TContext, TOutput> next)
         where TContext : IExecutionPipelineContext
     {
-        if (context.Scheduler is null)
-        {
-            return next(context, input);
-        }
-        else
-        {
-            return Task.Factory.StartNew(function: [DebuggerStepThrough][StackTraceHidden] () => next(context, input),
-                                         cancellationToken: context.ExecutionAborted,
-                                         creationOptions: TaskCreationOptions.None,
-                                         scheduler: context.Scheduler)
-                                .Unwrap();
-        }
+        return context.Scheduler is null
+               ? next(context, input)
+               : StartPipelineWithScheduler(context, input, next);
     }
 
     #endregion Public 方法
+
+    #region Private 方法
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static Task StartPipelineWithScheduler<TContext, TOutput>(TContext context, TOutput input, PipelineInvokeDelegate<TContext, TOutput> next)
+        where TContext : IExecutionPipelineContext
+    {
+        return Task.Factory.StartNew(function: [DebuggerStepThrough][StackTraceHidden] () => next(context, input),
+                                     cancellationToken: context.ExecutionAborted,
+                                     creationOptions: TaskCreationOptions.None,
+                                     scheduler: context.Scheduler!)
+                           .Unwrap();
+    }
+
+    #endregion Private 方法
 }
