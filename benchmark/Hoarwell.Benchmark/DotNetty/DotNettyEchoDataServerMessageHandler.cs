@@ -11,7 +11,7 @@ internal class DotNettyEchoDataServerMessageHandler : SimpleChannelInboundHandle
         var echo = new EchoData()
         {
             Id = msg.Id * 2,
-            Message = msg.Message,
+            Data = msg.Data,
         };
 
         ctx.WriteAndFlushAsync(echo);

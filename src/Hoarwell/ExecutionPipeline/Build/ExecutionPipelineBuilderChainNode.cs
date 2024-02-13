@@ -24,9 +24,9 @@ internal class ExecutionPipelineBuilderChainNode<TContext, TInput> : IExecutionP
     public ExecutionPipelineBuilderChainNode(ExecutionPipelineBuilderContext context, Func<object?, object> previousPipelineBuildDelegate)
     {
         Context = context ?? throw new ArgumentNullException(nameof(context));
-        Version = context.Version;
+        _previousPipelineBuildDelegate = previousPipelineBuildDelegate ?? throw new ArgumentNullException(nameof(previousPipelineBuildDelegate));
 
-        _previousPipelineBuildDelegate = previousPipelineBuildDelegate;
+        Version = context.Version;
     }
 
     #endregion Public 构造函数

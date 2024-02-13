@@ -1,6 +1,7 @@
 ﻿using System.Buffers;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
+using Hoarwell.Enhancement.Buffers;
 
 namespace Hoarwell;
 
@@ -48,10 +49,10 @@ public class EchoData
 
     public void Serialize(in IBufferWriter<byte> bufferWriter)
     {
-        bufferWriter.Write(BitConverter.GetBytes(Id));
-        var nameData = Encoding.UTF8.GetBytes(Message);
-        bufferWriter.Write(BitConverter.GetBytes(nameData.Length));
-        bufferWriter.Write(nameData);
+        bufferWriter.WriteLittleEndian(Id);
+        var messageData = Encoding.UTF8.GetBytes(Message);
+        bufferWriter.WriteLittleEndian(messageData.Length);
+        bufferWriter.Write(messageData);
     }
 
     #endregion Public 方法

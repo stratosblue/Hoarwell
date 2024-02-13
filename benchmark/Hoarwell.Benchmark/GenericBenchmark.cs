@@ -19,27 +19,27 @@ public class GenericBenchmark
     public const int HoarwellPort = 11234;
     public const int DotNettyPort = 11235;
 
-    private readonly Dictionary<int, string> _contentCache = [];
+    private readonly Dictionary<int, byte[]> _dataCache = [];
 
     [Params(1, 100)]
     public int EchoCount { get; set; }
 
     [Params(32, 1024)]
-    public int ContentSize { get; set; }
+    public int DataSize { get; set; }
 
     public GenericBenchmark()
     {
-        _contentCache.Add(32, BuildContentString(32));
-        _contentCache.Add(1024, BuildContentString(1024));
+        _dataCache.Add(32, BuildData(32));
+        _dataCache.Add(1024, BuildData(1024));
     }
 
     [Benchmark]
     public async Task Hoarwell()
     {
-        var message = _contentCache[ContentSize];
+        var data = _dataCache[DataSize];
         for (int i = 0; i < EchoCount; i++)
         {
-            await _clientBaseOnHoarwell.WriteAndFlushAsync(new EchoData() { Id = i, Message = message });
+            await _clientBaseOnHoarwell.WriteAndFlushAsync(new EchoData() { Id = i, Data = data });
         }
 
         await _clientBaseOnHoarwell.WaitCompleteAndResetAsync();
@@ -48,10 +48,10 @@ public class GenericBenchmark
     [Benchmark(Baseline = true)]
     public async Task DotNetty()
     {
-        var message = _contentCache[ContentSize];
+        var data = _dataCache[DataSize];
         for (int i = 0; i < EchoCount; i++)
         {
-            await _clientBaseOnDotNetty.WriteAndFlushAsync(new EchoData() { Id = i, Message = message });
+            await _clientBaseOnDotNetty.WriteAndFlushAsync(new EchoData() { Id = i, Data = data });
         }
 
         await _clientBaseOnDotNetty.WaitCompleteAndResetAsync();
@@ -93,13 +93,10 @@ public class GenericBenchmark
         }
     }
 
-    private static string BuildContentString(int size)
+    private static byte[] BuildData(int size)
     {
-        var builder = new StringBuilder(size);
-        for (int i = 0; i < size; i++)
-        {
-            builder.Append((char)Random.Shared.Next('a', 'z' + 1));
-        }
-        return builder.ToString();
+        var data = new byte[size];
+        Random.Shared.NextBytes(data);
+        return data;
     }
 }

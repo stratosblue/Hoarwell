@@ -11,7 +11,7 @@ internal class HoarwellEchoDataServerMessageHandler : IEndpointMessageHandler<Ec
         var echo = new EchoData()
         {
             Id = input.Id * 2,
-            Message = input.Message,
+            Data = input.Data,
         };
 
         return context.WriteAndFlushAsync(echo, default);
