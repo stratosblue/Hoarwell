@@ -11,7 +11,7 @@ a network application framework for rapid development of maintainable protocol s
 - 框架基于抽象的`Inputter`、`Outputter`，可以运行在任意可抽象的传输层之上，而不局限于`Socket`，例如：`NamedPipe`、`Http`等（参见示例项目 [ChatRoomOverHttp](./samples/ChatRoomOverHttp)）；
 - 基于 `管道` 的处理模型，可灵活组装、拓展；
 - `处理管道` 借鉴了部分 `Netty`/`DotNetty`，但与其不同：
-    - 入站(`Inbound`)与出站(`Outbound`)管道已拆分配置，不在混淆在一起配置；
+    - 入站(`Inbound`)与出站(`Outbound`)管道已拆分配置，不再混淆在一起配置；
     - 入站(`Inbound`)管道实现为强类型流转，而非 `object`，数据流转更明确；
 - 框架当前只提供了部分保证基础运行的实现，如：帧头长度编码、解码等，未提供其它高层数据协议，如：`Http`、`gzip`等；
 - 框架依赖于 `DependencyInjection`，能更好的与相关生态集成；
@@ -176,8 +176,8 @@ var context = await contextWaiter.Task; //获取客户端上下文
 
 ## 4. Samples
 
-[ChatRoom](./samples/ChatRoom): 简单的聊天室实现
-[ChatRoomOverHttp](./samples/ChatRoomOverHttp): 简单的聊天室实现，并运行于 `Http` 协议之上
+ - [ChatRoom](./samples/ChatRoom): 简单的聊天室实现
+ - [ChatRoomOverHttp](./samples/ChatRoomOverHttp): 简单的聊天室实现，并运行于 `Http` 协议之上
 
 ## 5. Benchmark
 
