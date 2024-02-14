@@ -174,16 +174,6 @@ public sealed class PooledByteRandomAccessibleBufferWriter : IRandomAccessibleBu
 
     #endregion RandomAccessible
 
-    internal ValueTask WriteToStreamAsync(Stream destination, CancellationToken cancellationToken)
-    {
-        return destination.WriteAsync(WrittenMemory, cancellationToken);
-    }
-
-    internal void WriteToStream(Stream destination)
-    {
-        destination.Write(WrittenMemory.Span);
-    }
-
     private void CheckAndResizeBuffer(int sizeHint)
     {
         Debug.Assert(_rentedBuffer != null);

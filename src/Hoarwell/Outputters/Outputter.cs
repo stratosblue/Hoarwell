@@ -86,13 +86,19 @@ public abstract class Outputter : IOutputter
     /// <inheritdoc/>
     public virtual async Task WriteAndFlushAsync<T>(IHoarwellContext context, T message, CancellationToken cancellationToken = default)
     {
-        using var bufferWriter = new PooledByteRandomAccessibleBufferWriter(BufferInitialCapacity);
+        var bufferWriter = CreateBufferWriter();
+        try
+        {
+            var outboundMetadata = new OutboundMetadata(bufferWriter, message, typeof(T));
 
-        var outboundMetadata = new OutboundMetadata(bufferWriter, message, typeof(T));
+            await SerializeOutboundMessageDelegate(context, outboundMetadata).ConfigureAwait(false);
 
-        await SerializeOutboundMessageDelegate(context, outboundMetadata).ConfigureAwait(false);
-
-        await WriteAndFlushAsync(bufferWriter.WrittenMemory, cancellationToken).ConfigureAwait(false);
+            await WriteAndFlushAsync(bufferWriter.WrittenMemory, cancellationToken).ConfigureAwait(false);
+        }
+        finally
+        {
+            DisposeBufferWriter(bufferWriter);
+        }
     }
 
     /// <inheritdoc/>
@@ -101,13 +107,19 @@ public abstract class Outputter : IOutputter
     /// <inheritdoc/>
     public virtual async Task WriteAsync<T>(IHoarwellContext context, T message, CancellationToken cancellationToken = default)
     {
-        using var bufferWriter = new PooledByteRandomAccessibleBufferWriter(initialCapacity: BufferInitialCapacity);
+        var bufferWriter = CreateBufferWriter();
+        try
+        {
+            var outboundMetadata = new OutboundMetadata(bufferWriter, message, typeof(T));
 
-        var outboundMetadata = new OutboundMetadata(bufferWriter, message, typeof(T));
+            await SerializeOutboundMessageDelegate(context, outboundMetadata).ConfigureAwait(false);
 
-        await SerializeOutboundMessageDelegate(context, outboundMetadata).ConfigureAwait(false);
-
-        await WriteAsync(bufferWriter.WrittenMemory, cancellationToken).ConfigureAwait(false);
+            await WriteAsync(bufferWriter.WrittenMemory, cancellationToken).ConfigureAwait(false);
+        }
+        finally
+        {
+            DisposeBufferWriter(bufferWriter);
+        }
     }
 
     /// <inheritdoc/>
@@ -116,6 +128,24 @@ public abstract class Outputter : IOutputter
     #endregion Public 方法
 
     #region Protected 方法
+
+    /// <summary>
+    /// 创建 <see cref="IRandomAccessibleBufferWriter{T}"/>
+    /// </summary>
+    /// <returns></returns>
+    protected virtual IRandomAccessibleBufferWriter<byte> CreateBufferWriter()
+    {
+        return new PooledByteRandomAccessibleBufferWriter(initialCapacity: BufferInitialCapacity);
+    }
+
+    /// <summary>
+    /// 处置已使用结束的 <see cref="IRandomAccessibleBufferWriter{T}"/>
+    /// </summary>
+    /// <param name="bufferWriter"></param>
+    protected virtual void DisposeBufferWriter(IRandomAccessibleBufferWriter<byte> bufferWriter)
+    {
+        (bufferWriter as IDisposable)?.Dispose();
+    }
 
     /// <summary>
     /// 如果已处置则抛出异常
