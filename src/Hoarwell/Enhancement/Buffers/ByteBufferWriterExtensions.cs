@@ -113,4 +113,90 @@ public static class ByteBufferWriterExtensions
     #endregion uint64
 
     #endregion LittleEndian
+
+    #region BigEndian
+
+    #region int16
+
+    /// <summary>
+    /// 将 <paramref name="value"/> 以 BigEndian 写入 <paramref name="bufferWriter"/>
+    /// </summary>
+    /// <param name="bufferWriter"></param>
+    /// <param name="value"></param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void WriteBigEndian(this IBufferWriter<byte> bufferWriter, in short value)
+    {
+        var span = bufferWriter.GetSpan(sizeof(short));
+        BinaryPrimitives.WriteInt16BigEndian(span, value);
+        bufferWriter.Advance(sizeof(short));
+    }
+
+    #endregion int16
+
+    #region uint16
+
+    /// <inheritdoc cref="WriteBigEndian(IBufferWriter{byte}, in short)"/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void WriteBigEndian(this IBufferWriter<byte> bufferWriter, in ushort value)
+    {
+        var span = bufferWriter.GetSpan(sizeof(ushort));
+        BinaryPrimitives.WriteUInt16BigEndian(span, value);
+        bufferWriter.Advance(sizeof(ushort));
+    }
+
+    #endregion uint16
+
+    #region int32
+
+    /// <inheritdoc cref="WriteBigEndian(IBufferWriter{byte}, in short)"/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void WriteBigEndian(this IBufferWriter<byte> bufferWriter, in int value)
+    {
+        var span = bufferWriter.GetSpan(sizeof(int));
+        BinaryPrimitives.WriteInt32BigEndian(span, value);
+        bufferWriter.Advance(sizeof(int));
+    }
+
+    #endregion int32
+
+    #region uint32
+
+    /// <inheritdoc cref="WriteBigEndian(IBufferWriter{byte}, in short)"/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void WriteBigEndian(this IBufferWriter<byte> bufferWriter, in uint value)
+    {
+        var span = bufferWriter.GetSpan(sizeof(uint));
+        BinaryPrimitives.WriteUInt32BigEndian(span, value);
+        bufferWriter.Advance(sizeof(uint));
+    }
+
+    #endregion uint32
+
+    #region int64
+
+    /// <inheritdoc cref="WriteBigEndian(IBufferWriter{byte}, in short)"/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void WriteBigEndian(this IBufferWriter<byte> bufferWriter, in long value)
+    {
+        var span = bufferWriter.GetSpan(sizeof(long));
+        BinaryPrimitives.WriteInt64BigEndian(span, value);
+        bufferWriter.Advance(sizeof(long));
+    }
+
+    #endregion int64
+
+    #region uint64
+
+    /// <inheritdoc cref="WriteBigEndian(IBufferWriter{byte}, in short)"/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void WriteBigEndian(this IBufferWriter<byte> bufferWriter, in ulong value)
+    {
+        var span = bufferWriter.GetSpan(sizeof(ulong));
+        BinaryPrimitives.WriteUInt64BigEndian(span, value);
+        bufferWriter.Advance(sizeof(ulong));
+    }
+
+    #endregion uint64
+
+    #endregion BigEndian
 }
