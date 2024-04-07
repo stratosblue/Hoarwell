@@ -212,6 +212,13 @@ public class WriteOnlySocketStream : Stream
 
     #region Protected 方法
 
+    /// <summary>
+    /// 新建NotSupported异常
+    /// </summary>
+    /// <param name="callerMemberName"></param>
+    /// <returns></returns>
+    protected static Exception NewNotSupportedException([CallerMemberName] string? callerMemberName = null) => new StreamOperationNotSupportedException($"The operation \"{callerMemberName}\" is not supported at current stream");
+
     /// <inheritdoc/>
     protected override void Dispose(bool disposing)
     {
@@ -241,13 +248,6 @@ public class WriteOnlySocketStream : Stream
 
         base.Dispose(disposing);
     }
-
-    /// <summary>
-    /// 新建NotSupported异常
-    /// </summary>
-    /// <param name="callerMemberName"></param>
-    /// <returns></returns>
-    protected Exception NewNotSupportedException([CallerMemberName] string? callerMemberName = null) => new StreamOperationNotSupportedException($"The operation \"{callerMemberName}\" is not supported at current stream");
 
     /// <summary>
     /// 在操作出现异常时触发

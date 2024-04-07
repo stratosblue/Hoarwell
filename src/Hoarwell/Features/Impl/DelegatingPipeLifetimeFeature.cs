@@ -16,12 +16,12 @@ internal sealed class DelegatingPipeLifetimeFeature : IPipeLifetimeFeature
 
     #region Public 构造函数
 
-    public DelegatingPipeLifetimeFeature(CancellationToken cancellationToken, Action abortCallback)
+    public DelegatingPipeLifetimeFeature(Action abortCallback, CancellationToken cancellationToken)
     {
         ArgumentNullExceptionHelper.ThrowIfNull(abortCallback, nameof(abortCallback));
 
-        PipeClosed = cancellationToken;
         _abortCallback = abortCallback;
+        PipeClosed = cancellationToken;
     }
 
     #endregion Public 构造函数

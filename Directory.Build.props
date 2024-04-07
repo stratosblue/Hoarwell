@@ -1,15 +1,15 @@
 ﻿<Project>
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
-    
+
     <IsPackable>false</IsPackable>
-    
+
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.0.1-preview-004</Version>
+    <Version>0.0.1-preview-005</Version>
 
     <Description>a network application framework for rapid development of maintainable protocol servers and clients. 一个用于快速开发可维护的协议的服务器和客户端的网络应用程序框架。</Description>
 

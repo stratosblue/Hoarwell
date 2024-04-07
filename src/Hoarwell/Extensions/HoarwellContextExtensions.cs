@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel;
-using Hoarwell;
 
-namespace Microsoft.Extensions.DependencyInjection;
+namespace Hoarwell;
 
 /// <summary>
 /// HoarwellContext 拓展方法集合

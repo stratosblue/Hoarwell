@@ -59,6 +59,7 @@ services.AddHoarwell("Server")
         {
             pipelineBuilder.UsePipeReaderAdaptMiddleware()
                            .UseUInt32LengthFieldBasedFrameDecoder()
+                           .UseInboundIdleStateHandler(TimeSpan.FromSeconds(10))
                            .UseDefaultMessageDeserializer()
                            .RunEndpoint(endpointBuilder =>
                            {
@@ -68,7 +69,8 @@ services.AddHoarwell("Server")
         })
         .ConfigureOutboundPipeline(pipelineBuilder =>
         {
-            pipelineBuilder.UseUInt32LengthFieldBasedFrameEncoder()
+            pipelineBuilder.UseOutboundIdleStateHandler(TimeSpan.FromSeconds(10))
+                           .UseUInt32LengthFieldBasedFrameEncoder()
                            .RunDefaultMessageSerializer();
         });
 

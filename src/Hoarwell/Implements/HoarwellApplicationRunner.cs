@@ -1,4 +1,5 @@
-﻿using System.Threading.Channels;
+﻿using System.Net.Sockets;
+using System.Threading.Channels;
 using Hoarwell.Features;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.DependencyInjection;
@@ -291,13 +292,18 @@ public abstract class HoarwellApplicationRunner<TContext, TApplication, TInputte
 
             context = await application.CreateContext(features).ConfigureAwait(false);
 
+            if (serviceScope.ServiceProvider.GetService<HoarwellContextAccessor>() is { } contextAccessor)
+            {
+                contextAccessor.Context = context;
+            }
+
             FireContextActive(context);
 
             await application.ExecuteAsync(context, duplexPipeContext.Inputter, duplexPipeContext.Outputter).ConfigureAwait(false);
         }
         catch (Exception ex)
         {
-            if (ex is OperationCanceledException or IOException
+            if (ex is OperationCanceledException or IOException or SocketException
                 && context?.ExecutionAborted.IsCancellationRequested == true)
             {
                 Logger.LogWarning(ex, "An error occurred while running application");
