@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-
-namespace Hoarwell.Benchmark.Hoarwell;
+﻿namespace Hoarwell.Benchmark.Hoarwell;
 
 internal class HoarwellEchoDataServerMessageHandler : IEndpointMessageHandler<EchoData>
 {

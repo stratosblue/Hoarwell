@@ -1,6 +1,6 @@
 ﻿using System.Threading.Channels;
 using Hoarwell;
-using Microsoft.AspNetCore.Http.Features;
+using Hoarwell.Features;
 
 namespace ChatRoomOverHttp.Server.Transport;
 
@@ -14,7 +14,7 @@ internal class HttpBasePipeConnector : IDuplexPipeConnector<Stream, Stream>
 
     #region Public 属性
 
-    public IFeatureCollection Features { get; } = new FeatureCollection();
+    public IFeatureCollection Features { get; } = new ConcurrentFeatureCollection();
 
     #endregion Public 属性
 

@@ -2,7 +2,6 @@
 using Hoarwell.Features;
 using Hoarwell.Transport.AspNetCore.Features;
 using Microsoft.AspNetCore.Connections;
-using Microsoft.AspNetCore.Http.Features;
 
 namespace Hoarwell.Transport.AspNetCore;
 

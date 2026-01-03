@@ -1,7 +1,6 @@
 ﻿using Hoarwell.ExecutionPipeline;
 using Hoarwell.Features;
 using Hoarwell.Options;
-using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
@@ -32,7 +31,7 @@ public class DefaultHoarwellApplication<TInputter, TOutputter> : DefaultHoarwell
     /// <inheritdoc/>
     public override ValueTask<HoarwellContext> CreateContext(IFeatureCollection features)
     {
-        var duplexPipeFeature = features.GetRequiredFeature<IDuplexPipeFeature<TInputter, TOutputter>>();
+        var duplexPipeFeature = features.Required<IDuplexPipeFeature<TInputter, TOutputter>>();
 
         var adaptedOutputter = OutputterAdapter.Adapt(duplexPipeFeature.Outputter, SerializeOutboundMessageDelegate);
 

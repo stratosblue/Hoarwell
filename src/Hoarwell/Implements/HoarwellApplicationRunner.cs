@@ -1,7 +1,6 @@
 ﻿using System.Net.Sockets;
 using System.Threading.Channels;
 using Hoarwell.Features;
-using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -283,7 +282,7 @@ public abstract class HoarwellApplicationRunner<TContext, TApplication, TInputte
         TContext? context = default;
         try
         {
-            var features = new FeatureCollection(duplexPipeContext.Features);
+            var features = new ConcurrentFeatureCollection(duplexPipeContext.Features);
 
             await using var serviceScope = ServiceScopeFactory.CreateAsyncScope();
 

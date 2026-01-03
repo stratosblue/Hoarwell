@@ -27,7 +27,7 @@ internal class EchoDataClientMessageHandler : IEndpointMessageHandler<EchoData>
 
     #region Public 方法
 
-    public Task HandleAsync(IHoarwellContext context, EchoData input)
+    public Task HandleAsync(IHoarwellContext context, EchoData? input)
     {
         if (Interlocked.Increment(ref _count) == _completeCount)
         {

@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Http.Features;
+﻿using Hoarwell.Features;
 
 namespace Hoarwell.Test.TestUtilities;
 
-internal class TestFeatureCollection : FeatureCollection
+internal class TestFeatureCollection : ConcurrentFeatureCollection
 {
 }

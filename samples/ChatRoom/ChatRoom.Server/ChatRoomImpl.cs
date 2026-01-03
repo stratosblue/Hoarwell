@@ -1,7 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using Chat.Shared;
 using Hoarwell;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace ChatRoom.Server;
 

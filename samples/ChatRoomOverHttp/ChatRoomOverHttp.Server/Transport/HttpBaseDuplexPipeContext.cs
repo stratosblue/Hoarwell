@@ -1,7 +1,6 @@
 ﻿using Hoarwell;
 using Hoarwell.Features;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Features;
 
 namespace ChatRoomOverHttp.Server.Transport;
 
@@ -31,7 +30,7 @@ internal class HttpBaseDuplexPipeContext : IDuplexPipeContext<Stream, Stream>
     {
         _context = context;
         PipeClosed = context.RequestAborted;
-        Features = new FeatureCollection(context.Features);
+        Features = new ConcurrentFeatureCollection(context.Features!);
         Inputter = context.Request.Body;
         Outputter = context.Response.Body;
 

@@ -1,5 +1,4 @@
 ﻿using System.IO.Pipelines;
-using Hoarwell.Features;
 using Hoarwell.Transport.AspNetCore.Features;
 using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore.Connections.Features;
@@ -19,7 +18,7 @@ internal class DuplexPipeConnectionContextContext : IDuplexPipeContext<PipeReade
 
     #region Public 属性
 
-    public IFeatureCollection Features { get; }
+    public Hoarwell.Features.IFeatureCollection Features { get; }
 
     public PipeReader Inputter { get; }
 
@@ -40,9 +39,9 @@ internal class DuplexPipeConnectionContextContext : IDuplexPipeContext<PipeReade
         Inputter = _connectionContext.Transport.Input;
         Outputter = _connectionContext.Transport.Output;
         PipeClosed = _connectionContext.ConnectionClosed;
-        Features = new FeatureCollection(_connectionContext.Features);
+        Features = new Hoarwell.Features.ConcurrentFeatureCollection(_connectionContext.Features!);
 
-        Features.Set<IPipeLifetimeFeature>(new ConnectionPipeLifetimeFeature(_connectionContext.Features.Required<IConnectionLifetimeFeature>()));
+        Features.Set<Hoarwell.Features.IPipeLifetimeFeature>(new ConnectionPipeLifetimeFeature(_connectionContext.Features.GetRequiredFeature<IConnectionLifetimeFeature>()));
     }
 
     #endregion Public 构造函数

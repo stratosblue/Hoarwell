@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http.Features;
+﻿using Hoarwell.Features;
 
 namespace Hoarwell.Transport;
 
@@ -24,7 +24,7 @@ public abstract class SingleConnectionDuplexPipeConnector<TInputter, TOutputter>
     #region Public 属性
 
     /// <inheritdoc/>
-    public virtual IFeatureCollection Features { get; } = new FeatureCollection();
+    public virtual IFeatureCollection Features { get; } = new ConcurrentFeatureCollection();
 
     #endregion Public 属性
 

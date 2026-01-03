@@ -1,5 +1,5 @@
 ﻿using System.Net.Sockets;
-using Microsoft.AspNetCore.Http.Features;
+using Hoarwell.Features;
 
 namespace Hoarwell.Transport;
 
@@ -28,7 +28,7 @@ public sealed class SocketListenerConnector : IDuplexPipeConnector<Stream, Strea
     {
         ArgumentNullExceptionHelper.ThrowIfNull(socket, nameof(socket));
 
-        Features = new FeatureCollection();
+        Features = new ConcurrentFeatureCollection();
 
         _socket = socket;
     }

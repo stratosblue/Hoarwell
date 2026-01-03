@@ -1,7 +1,6 @@
 ﻿using ChatRoomOverHttp.Client.Transport;
 using Hoarwell;
 using Hoarwell.Features;
-using Microsoft.AspNetCore.Http.Features;
 
 namespace ChatRoomOverHttp.Server.Transport;
 
@@ -36,7 +35,7 @@ internal class HttpClientBaseDuplexPipeContext : IDuplexPipeContext<Stream, Stre
         _httpClient = httpClient;
         _responseStreamGetTask = responseStreamGetTask;
         PipeClosed = cancellationTokenSource.Token;
-        Features = new FeatureCollection();
+        Features = new ConcurrentFeatureCollection();
         Inputter = new DelayInitStream(responseStreamGetTask);
         Outputter = writeStream;
 

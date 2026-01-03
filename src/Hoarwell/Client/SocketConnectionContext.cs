@@ -1,6 +1,5 @@
 ﻿using System.Net.Sockets;
 using Hoarwell.Features;
-using Microsoft.AspNetCore.Http.Features;
 
 namespace Hoarwell.Client;
 
@@ -46,7 +45,7 @@ internal class SocketConnectionContext<TReader, TWriter> : IDuplexPipeContext<TR
 
         _disposeCallback = disposeCallback;
 
-        Features = new FeatureCollection(2);
+        Features = new ConcurrentFeatureCollection();
         Features.Set<IPipeLifetimeFeature>(lifetimeFeature);
 
         PipeClosed = lifetimeFeature.PipeClosed;
