@@ -23,21 +23,21 @@ public class WriteOnlySocketStreamTest
 
         var buffer = new byte[] { 1, 2, 3, 4 };
 
-        Assert.ThrowsException<StreamOperationNotSupportedException>(() => stream.Length);
-        Assert.ThrowsException<StreamOperationNotSupportedException>(() => stream.Position);
-        Assert.ThrowsException<StreamOperationNotSupportedException>(() => stream.Position = 0);
-        Assert.ThrowsException<StreamOperationNotSupportedException>(() => stream.ReadTimeout);
-        Assert.ThrowsException<StreamOperationNotSupportedException>(() => stream.ReadTimeout = 0);
-        Assert.ThrowsException<StreamOperationNotSupportedException>(() => stream.WriteTimeout);
-        Assert.ThrowsException<StreamOperationNotSupportedException>(() => stream.WriteTimeout = 0);
-        Assert.ThrowsException<StreamOperationNotSupportedException>(() => stream.Read(buffer, 0, buffer.Length));
-        Assert.ThrowsException<StreamOperationNotSupportedException>(() => stream.Read(buffer));
-        Assert.ThrowsException<StreamOperationNotSupportedException>(() => stream.ReadByte());
-        await Assert.ThrowsExceptionAsync<StreamOperationNotSupportedException>(async () => await stream.ReadAsync(buffer, 0, buffer.Length));
-        await Assert.ThrowsExceptionAsync<StreamOperationNotSupportedException>(async () => await stream.ReadAsync(buffer, 0, buffer.Length, default));
-        await Assert.ThrowsExceptionAsync<StreamOperationNotSupportedException>(async () => await stream.ReadAsync(buffer));
-        Assert.ThrowsException<StreamOperationNotSupportedException>(() => stream.BeginRead(buffer, 0, 1, null, null));
-        Assert.ThrowsException<StreamOperationNotSupportedException>(() => stream.EndRead(null!));
+        Assert.ThrowsExactly<StreamOperationNotSupportedException>(() => stream.Length);
+        Assert.ThrowsExactly<StreamOperationNotSupportedException>(() => stream.Position);
+        Assert.ThrowsExactly<StreamOperationNotSupportedException>(() => stream.Position = 0);
+        Assert.ThrowsExactly<StreamOperationNotSupportedException>(() => stream.ReadTimeout);
+        Assert.ThrowsExactly<StreamOperationNotSupportedException>(() => stream.ReadTimeout = 0);
+        Assert.ThrowsExactly<StreamOperationNotSupportedException>(() => stream.WriteTimeout);
+        Assert.ThrowsExactly<StreamOperationNotSupportedException>(() => stream.WriteTimeout = 0);
+        Assert.ThrowsExactly<StreamOperationNotSupportedException>(() => stream.Read(buffer, 0, buffer.Length));
+        Assert.ThrowsExactly<StreamOperationNotSupportedException>(() => stream.Read(buffer));
+        Assert.ThrowsExactly<StreamOperationNotSupportedException>(() => stream.ReadByte());
+        await Assert.ThrowsExactlyAsync<StreamOperationNotSupportedException>(async () => await stream.ReadAsync(buffer, 0, buffer.Length));
+        await Assert.ThrowsExactlyAsync<StreamOperationNotSupportedException>(async () => await stream.ReadAsync(buffer, 0, buffer.Length, default));
+        await Assert.ThrowsExactlyAsync<StreamOperationNotSupportedException>(async () => await stream.ReadAsync(buffer));
+        Assert.ThrowsExactly<StreamOperationNotSupportedException>(() => stream.BeginRead(buffer, 0, 1, null, null));
+        Assert.ThrowsExactly<StreamOperationNotSupportedException>(() => stream.EndRead(null!));
     }
 
     #endregion Public 方法
