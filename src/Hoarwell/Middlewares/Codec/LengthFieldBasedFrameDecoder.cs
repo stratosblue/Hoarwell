@@ -8,25 +8,11 @@ namespace Hoarwell.Middlewares.Codec;
 /// 基于长度帧头的数据帧解码器
 /// </summary>
 /// <typeparam name="TContext"></typeparam>
-public class LengthFieldBasedFrameDecoder<TContext>
-    : LengthFieldBasedFrameCodecBase, IPipelineMiddleware<TContext, PipeReader, ReadOnlySequence<byte>>
+public class LengthFieldBasedFrameDecoder<TContext>(LengthFieldBasedFrameCodecOptions options)
+    : LengthFieldBasedFrameCodecBase(options)
+    , IPipelineMiddleware<TContext, PipeReader, ReadOnlySequence<byte>>
     where TContext : IHoarwellContext
 {
-    #region Public 构造函数
-
-    /// <summary>
-    /// <inheritdoc cref="LengthFieldBasedFrameDecoder{TContext}"/>
-    /// </summary>
-    /// <param name="frameHeaderSize">帧头大小</param>
-    /// <param name="shouldLengthIncludeFrameHeaderSize">长度是否包含帧头大小</param>
-    /// <param name="useLittleEndian">是否使用小端序</param>
-    public LengthFieldBasedFrameDecoder(int frameHeaderSize, bool shouldLengthIncludeFrameHeaderSize = false, bool useLittleEndian = true)
-        : base(frameHeaderSize, shouldLengthIncludeFrameHeaderSize, useLittleEndian)
-    {
-    }
-
-    #endregion Public 构造函数
-
     #region Public 方法
 
     /// <inheritdoc/>

@@ -89,7 +89,7 @@ public class CommunicationBaseTest
                 })
                 .ConfigureInboundPipeline(pipelineBuilder =>
                 {
-                    pipelineBuilder.UseLengthFieldBasedFrameDecoder(lengthDataSize)
+                    pipelineBuilder.UseLengthFieldBasedFrameDecoder(new(lengthDataSize))
                                    .UseDefaultMessageDeserializer()
                                    .RunEndpoint(endpointBuilder =>
                                    {
@@ -98,7 +98,7 @@ public class CommunicationBaseTest
                 })
                 .ConfigureOutboundPipeline(pipelineBuilder =>
                 {
-                    pipelineBuilder.UseLengthFieldBasedFrameEncoder(lengthDataSize)
+                    pipelineBuilder.UseLengthFieldBasedFrameEncoder(new(lengthDataSize))
                                    .RunDefaultMessageSerializer();
                 });
 
@@ -136,7 +136,7 @@ public class CommunicationBaseTest
                 })
                 .ConfigureInboundPipeline(pipelineBuilder =>
                 {
-                    pipelineBuilder.UseLengthFieldBasedFrameDecoder(lengthDataSize)
+                    pipelineBuilder.UseLengthFieldBasedFrameDecoder(new(lengthDataSize))
                                    .UseDefaultMessageDeserializer()
                                    .RunEndpoint(endpointBuilder =>
                                    {
@@ -145,7 +145,7 @@ public class CommunicationBaseTest
                 })
                 .ConfigureOutboundPipeline(pipelineBuilder =>
                 {
-                    pipelineBuilder.UseLengthFieldBasedFrameEncoder(lengthDataSize)
+                    pipelineBuilder.UseLengthFieldBasedFrameEncoder(new(lengthDataSize))
                                    .RunDefaultMessageSerializer();
                 });
 

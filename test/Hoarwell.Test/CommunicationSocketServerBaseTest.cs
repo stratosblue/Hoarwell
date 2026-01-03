@@ -92,7 +92,7 @@ public class CommunicationSocketServerBaseTest
                 .ConfigureInboundPipeline(pipelineBuilder =>
                 {
                     pipelineBuilder.UsePipeReaderAdaptMiddleware()
-                                   .UseLengthFieldBasedFrameDecoder(lengthDataSize)
+                                   .UseLengthFieldBasedFrameDecoder(new(lengthDataSize))
                                    .UseDefaultMessageDeserializer()
                                    .RunEndpoint(endpointBuilder =>
                                    {
@@ -101,7 +101,7 @@ public class CommunicationSocketServerBaseTest
                 })
                 .ConfigureOutboundPipeline(pipelineBuilder =>
                 {
-                    pipelineBuilder.UseLengthFieldBasedFrameEncoder(lengthDataSize)
+                    pipelineBuilder.UseLengthFieldBasedFrameEncoder(new(lengthDataSize))
                                    .RunDefaultMessageSerializer();
                 });
 
@@ -140,7 +140,7 @@ public class CommunicationSocketServerBaseTest
                 .ConfigureInboundPipeline(pipelineBuilder =>
                 {
                     pipelineBuilder.UsePipeReaderAdaptMiddleware()
-                                   .UseLengthFieldBasedFrameDecoder(lengthDataSize)
+                                   .UseLengthFieldBasedFrameDecoder(new(lengthDataSize))
                                    .UseDefaultMessageDeserializer()
                                    .RunEndpoint(endpointBuilder =>
                                    {
@@ -149,7 +149,7 @@ public class CommunicationSocketServerBaseTest
                 })
                 .ConfigureOutboundPipeline(pipelineBuilder =>
                 {
-                    pipelineBuilder.UseLengthFieldBasedFrameEncoder(lengthDataSize)
+                    pipelineBuilder.UseLengthFieldBasedFrameEncoder(new(lengthDataSize))
                                    .RunDefaultMessageSerializer();
                 });
 

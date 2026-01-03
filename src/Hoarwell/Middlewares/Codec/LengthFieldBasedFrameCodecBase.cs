@@ -6,6 +6,33 @@ using System.Runtime.InteropServices;
 namespace Hoarwell.Middlewares.Codec;
 
 /// <summary>
+/// 基于长度帧头的数据帧编码器选项
+/// </summary>
+/// <param name="FrameHeaderSize">帧头大小</param>
+/// <param name="ShouldLengthIncludeFrameHeaderSize">长度是否应包含帧头大小</param>
+/// <param name="UseLittleEndian">是否使用小端序</param>
+public record class LengthFieldBasedFrameCodecOptions(int FrameHeaderSize, bool ShouldLengthIncludeFrameHeaderSize = false, bool UseLittleEndian = true)
+{
+    #region Public 字段
+
+    /// <summary>
+    /// 默认最大帧大小
+    /// </summary>
+    public const uint DefaultMaxFrameSize = 30_000_000;
+
+    #endregion Public 字段
+
+    #region Public 属性
+
+    /// <summary>
+    /// 最大帧大小
+    /// </summary>
+    public uint? MaxFrameSize { get; set; } = DefaultMaxFrameSize;
+
+    #endregion Public 属性
+}
+
+/// <summary>
 /// 基于长度帧头的帧编码器基类
 /// </summary>
 public abstract class LengthFieldBasedFrameCodecBase
@@ -44,16 +71,15 @@ public abstract class LengthFieldBasedFrameCodecBase
     /// <summary>
     /// <inheritdoc cref="LengthFieldBasedFrameCodecBase"/>
     /// </summary>
-    /// <param name="frameHeaderSize">帧头大小</param>
-    /// <param name="shouldLengthIncludeFrameHeaderSize">长度是否应包含帧头大小</param>
-    /// <param name="useLittleEndian">是否使用小端序</param>
     /// <exception cref="ArgumentOutOfRangeException"></exception>
-    public LengthFieldBasedFrameCodecBase(int frameHeaderSize, bool shouldLengthIncludeFrameHeaderSize = false, bool useLittleEndian = true)
+    public LengthFieldBasedFrameCodecBase(LengthFieldBasedFrameCodecOptions options)
     {
+        var (frameHeaderSize, shouldLengthIncludeFrameHeaderSize, useLittleEndian) = options;
+
         if (frameHeaderSize < 1
             || frameHeaderSize > sizeof(long))
         {
-            throw new ArgumentOutOfRangeException(nameof(frameHeaderSize), $"The length must between 1 and {sizeof(long)}");
+            throw new ArgumentOutOfRangeException(nameof(options), $"The \"{nameof(options.FrameHeaderSize)}\" length must between 1 and {sizeof(long)}");
         }
 
         FrameHeaderSize = frameHeaderSize;

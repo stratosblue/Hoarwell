@@ -18,7 +18,7 @@ public static class LengthFieldBasedFrameCodecExtensions
     #region UInt32
 
     /// <summary>
-    /// 使用默认的基于 uin32 的帧解码器
+    /// 使用默认的基于 uint32 的帧解码器
     /// </summary>
     /// <typeparam name="TContext"></typeparam>
     /// <param name="builder"></param>
@@ -30,7 +30,7 @@ public static class LengthFieldBasedFrameCodecExtensions
     }
 
     /// <summary>
-    /// 使用默认的基于 uin32 的帧编码器
+    /// 使用默认的基于 uint32 的帧编码器
     /// </summary>
     /// <typeparam name="TContext"></typeparam>
     /// <param name="builder"></param>
@@ -50,17 +50,13 @@ public static class LengthFieldBasedFrameCodecExtensions
     /// </summary>
     /// <typeparam name="TContext"></typeparam>
     /// <param name="builder"></param>
-    /// <param name="frameHeaderSize">帧头大小</param>
-    /// <param name="shouldLengthIncludeFrameHeaderSize">长度是否包含帧头大小</param>
-    /// <param name="useLittleEndian">是否使用小端序</param>
+    /// <param name="options">选项</param>
     /// <returns></returns>
     public static InboundPipelineBuilderChainNode<TContext, ReadOnlySequence<byte>> UseLengthFieldBasedFrameDecoder<TContext>(this InboundPipelineBuilderChainNode<TContext, PipeReader> builder,
-                                                                                                                              int frameHeaderSize,
-                                                                                                                              bool shouldLengthIncludeFrameHeaderSize = false,
-                                                                                                                              bool useLittleEndian = true)
+                                                                                                                              LengthFieldBasedFrameCodecOptions options)
         where TContext : IHoarwellContext
     {
-        var decoder = new LengthFieldBasedFrameDecoder<TContext>(frameHeaderSize, shouldLengthIncludeFrameHeaderSize, useLittleEndian);
+        var decoder = new LengthFieldBasedFrameDecoder<TContext>(options);
         return builder.Use<LengthFieldBasedFrameDecoder<TContext>, ReadOnlySequence<byte>>(decoder);
     }
 
@@ -69,17 +65,13 @@ public static class LengthFieldBasedFrameCodecExtensions
     /// </summary>
     /// <typeparam name="TContext"></typeparam>
     /// <param name="builder"></param>
-    /// <param name="frameHeaderSize">帧头大小</param>
-    /// <param name="shouldLengthIncludeFrameHeaderSize">长度是否包含帧头大小</param>
-    /// <param name="useLittleEndian">是否使用小端序</param>
+    /// <param name="options">选项</param>
     /// <returns></returns>
     public static OutboundPipelineBuilderChainNode<TContext, OutboundMetadata> UseLengthFieldBasedFrameEncoder<TContext>(this OutboundPipelineBuilderChainNode<TContext, OutboundMetadata> builder,
-                                                                                                                         int frameHeaderSize,
-                                                                                                                         bool shouldLengthIncludeFrameHeaderSize = false,
-                                                                                                                         bool useLittleEndian = true)
+                                                                                                                         LengthFieldBasedFrameCodecOptions options)
         where TContext : IHoarwellContext
     {
-        var encoder = new LengthFieldBasedFrameEncoder<TContext>(frameHeaderSize, shouldLengthIncludeFrameHeaderSize, useLittleEndian);
+        var encoder = new LengthFieldBasedFrameEncoder<TContext>(options);
         return builder.Use<LengthFieldBasedFrameEncoder<TContext>, OutboundMetadata>(encoder);
     }
 

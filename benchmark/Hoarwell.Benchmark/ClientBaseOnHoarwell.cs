@@ -66,7 +66,7 @@ internal class ClientBaseOnHoarwell
                 })
                 .ConfigureInboundPipeline(pipelineBuilder =>
                 {
-                    pipelineBuilder.UseLengthFieldBasedFrameDecoder(LengthDataSize)
+                    pipelineBuilder.UseLengthFieldBasedFrameDecoder(new(LengthDataSize))
                                    .UseDefaultMessageDeserializer()
                                    .RunEndpoint(endpointBuilder =>
                                    {
@@ -75,7 +75,7 @@ internal class ClientBaseOnHoarwell
                 })
                 .ConfigureOutboundPipeline(pipelineBuilder =>
                 {
-                    pipelineBuilder.UseLengthFieldBasedFrameEncoder(LengthDataSize)
+                    pipelineBuilder.UseLengthFieldBasedFrameEncoder(new(LengthDataSize))
                                    .RunDefaultMessageSerializer();
                 });
 

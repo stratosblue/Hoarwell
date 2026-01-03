@@ -8,16 +8,22 @@ namespace Hoarwell.Middlewares.Codec;
 /// 基于长度帧头（uint32）的数据帧编码器
 /// </summary>
 /// <typeparam name="TContext"></typeparam>
-public class UInt32LengthFieldBasedFrameEncoder<TContext>
+public class UInt32LengthFieldBasedFrameEncoder<TContext>(UInt32LengthFieldBasedFrameCodecOptions options)
     : IPipelineMiddleware<TContext, OutboundMetadata, OutboundMetadata>
     where TContext : IHoarwellContext
 {
+    #region Private 字段
+
+    private readonly uint _maxFrameSize = options.MaxFrameSize ?? uint.MaxValue;
+
+    #endregion Private 字段
+
     #region Singleton
 
     /// <summary>
     /// UInt32LengthFieldBasedFrameEncoder静态实例
     /// </summary>
-    public static UInt32LengthFieldBasedFrameEncoder<TContext> Shared { get; } = new();
+    public static UInt32LengthFieldBasedFrameEncoder<TContext> Shared { get; } = new(new());
 
     #endregion Singleton
 
@@ -42,7 +48,14 @@ public class UInt32LengthFieldBasedFrameEncoder<TContext>
 
         await next(context, input).ConfigureAwait(false);
 
-        Unsafe.WriteUnaligned<uint>(ref MemoryMarshal.GetReference(bufferWriter.GetSpan(anchor - FrameHeaderSize, FrameHeaderSize)), (uint)(bufferWriter.WrittenCount - anchor));
+        var length = (uint)(bufferWriter.WrittenCount - anchor);
+
+        if (length > _maxFrameSize)
+        {
+            throw new InvalidDataException($"Invalid frame length \"{length}\". Maximum available size is \"{_maxFrameSize}\".");
+        }
+
+        Unsafe.WriteUnaligned<uint>(ref MemoryMarshal.GetReference(bufferWriter.GetSpan(anchor - FrameHeaderSize, FrameHeaderSize)), length);
 
         if (!BitConverter.IsLittleEndian)   //这个逻辑需要验证
         {

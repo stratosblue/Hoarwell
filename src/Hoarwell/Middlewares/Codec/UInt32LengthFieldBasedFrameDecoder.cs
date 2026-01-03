@@ -7,19 +7,50 @@ using Hoarwell.ExecutionPipeline;
 namespace Hoarwell.Middlewares.Codec;
 
 /// <summary>
+/// 基于长度帧头（uint32）的数据帧编码器选项
+/// </summary>
+public record class UInt32LengthFieldBasedFrameCodecOptions
+{
+    #region Public 字段
+
+    /// <summary>
+    /// 默认最大帧大小
+    /// </summary>
+    public const uint DefaultMaxFrameSize = 30_000_000;
+
+    #endregion Public 字段
+
+    #region Public 属性
+
+    /// <summary>
+    /// 最大帧大小
+    /// </summary>
+    public uint? MaxFrameSize { get; set; } = DefaultMaxFrameSize;
+
+    #endregion Public 属性
+}
+
+/// <summary>
 /// 基于长度帧头（uint32）的数据帧解码器
 /// </summary>
+/// <param name="options">选项</param>
 /// <typeparam name="TContext"></typeparam>
-public class UInt32LengthFieldBasedFrameDecoder<TContext>
+public class UInt32LengthFieldBasedFrameDecoder<TContext>(UInt32LengthFieldBasedFrameCodecOptions options)
     : IPipelineMiddleware<TContext, PipeReader, ReadOnlySequence<byte>>
     where TContext : IHoarwellContext
 {
+    #region Private 字段
+
+    private readonly uint _maxFrameSize = options.MaxFrameSize ?? uint.MaxValue;
+
+    #endregion Private 字段
+
     #region Singleton
 
     /// <summary>
-    /// UInt32LengthFieldBasedFrameDecoder静态实例
+    /// <see cref="UInt32LengthFieldBasedFrameDecoder{TContext}"/> 静态实例
     /// </summary>
-    public static UInt32LengthFieldBasedFrameDecoder<TContext> Shared { get; } = new();
+    public static UInt32LengthFieldBasedFrameDecoder<TContext> Shared { get; } = new(new());
 
     #endregion Singleton
 
@@ -69,6 +100,11 @@ public class UInt32LengthFieldBasedFrameDecoder<TContext>
                 {
                     pipeReader.AdvanceTo(buffer.GetPosition(FrameHeaderSize));
                     continue;
+                }
+
+                if (totalLength > _maxFrameSize)
+                {
+                    throw new InvalidDataException($"Invalid frame length \"{totalLength}\". Maximum available size is \"{_maxFrameSize}\".");
                 }
 
                 totalLengthNotComputedYet = false;
