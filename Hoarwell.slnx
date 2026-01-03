@@ -27,6 +27,10 @@
     <File Path="LICENSE.txt" />
     <File Path="README.md" />
   </Folder>
+  <Folder Name="/solution items/.github/" />
+  <Folder Name="/solution items/.github/workflows/">
+    <File Path=".github/workflows/PublishNugetPackage.yml" />
+  </Folder>
   <Folder Name="/src/">
     <File Path="src/Directory.Build.props" />
     <Project Path="src/Hoarwell.Transport.AspNetCore/Hoarwell.Transport.AspNetCore.csproj" />
