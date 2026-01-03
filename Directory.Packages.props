@@ -1,0 +1,22 @@
+﻿<Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
+    <NoWarn>$(NoWarn);NU1507</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.1" />
+    <PackageVersion Include="Microsoft.Extensions.Features" Version="10.0.1" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="10.0.1" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.1" />
+    <PackageVersion Include="Microsoft.Extensions.Options" Version="10.0.1" />
+    <PackageVersion Include="System.IO.Pipelines" Version="10.0.1" />
+    <PackageVersion Include="System.Threading.Channels" Version="10.0.1" />
+    <PackageVersion Include="BenchmarkDotNet" Version="0.15.8" />
+    <PackageVersion Include="ConfigureAwaitAnalyzer" Version="1.1.0" />
+    <PackageVersion Include="DotNetty.Codecs" Version="0.7.6" />
+    <PackageVersion Include="DotNetty.Common" Version="0.7.6" />
+    <PackageVersion Include="DotNetty.Handlers" Version="0.7.6" />
+    <PackageVersion Include="DotNetty.Transport.Libuv" Version="0.7.6" />
+  </ItemGroup>
+</Project>
