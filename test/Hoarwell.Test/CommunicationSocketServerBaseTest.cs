@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using Hoarwell.Extensions;
+using Hoarwell.Features;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
@@ -24,9 +25,11 @@ public class CommunicationSocketServerBaseTest
     [DataRow(8)]
     public async Task ShouldEchoSucceedAsync(int lengthDataSize)
     {
-        var endpoint = IPEndPoint.Parse("127.0.0.1:12342");
+        EndPoint endpoint = IPEndPoint.Parse("127.0.0.1:0");
         var serverRunnerInfo = await InitServer(endpoint, lengthDataSize);
         await serverRunnerInfo.Runner.StartAsync();
+
+        endpoint = serverRunnerInfo.Runner.Features.RequiredFeature<ILocalEndPointsFeature>().EndPoints.First();
 
         var clientRunnerInfo = await InitClient(endpoint, lengthDataSize);
         using var waiter = clientRunnerInfo.Runner.GetContextWaiter();

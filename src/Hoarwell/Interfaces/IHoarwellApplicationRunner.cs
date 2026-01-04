@@ -1,4 +1,6 @@
-﻿namespace Hoarwell;
+﻿using Hoarwell.Features;
+
+namespace Hoarwell;
 
 /// <summary>
 /// 应用程序运行程序
@@ -25,6 +27,11 @@ public interface IHoarwellApplicationRunner : IAsyncDisposable
     /// 应用程序停止 <see cref="CancellationToken"/>
     /// </summary>
     public CancellationToken ApplicationStopping { get; }
+
+    /// <summary>
+    /// 特征集合
+    /// </summary>
+    public IFeatureCollection Features { get; }
 
     #endregion Public 属性
 

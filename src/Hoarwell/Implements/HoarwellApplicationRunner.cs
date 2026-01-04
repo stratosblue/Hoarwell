@@ -1,4 +1,5 @@
-﻿using System.Net.Sockets;
+﻿using System.Net;
+using System.Net.Sockets;
 using System.Threading.Channels;
 using Hoarwell.Features;
 using Microsoft.Extensions.DependencyInjection;
@@ -56,6 +57,9 @@ public abstract class HoarwellApplicationRunner<TContext, TApplication, TInputte
 
     #region Protected 属性
 
+    /// <inheritdoc/>
+    public IFeatureCollection Features { get; } = new ConcurrentFeatureCollection();
+
     /// <summary>
     /// 使用的应用程序
     /// </summary>
@@ -107,6 +111,8 @@ public abstract class HoarwellApplicationRunner<TContext, TApplication, TInputte
         ApplicationStopping = _runningCTS.Token;
 
         ContextEventChannel = Channel.CreateUnbounded<ContextEventRecord>(new() { SingleReader = true });
+
+        Features.Set<ILocalEndPointsFeature>(new DynamicConnectorsLocalEndPointsFeature(() => _connectors));
 
         Task.Factory.StartNew(function: async state =>
         {
@@ -438,6 +444,24 @@ public abstract class HoarwellApplicationRunner<TContext, TApplication, TInputte
     /// <param name="Context"></param>
     /// <param name="IsActive">是否为激活</param>
     protected record struct ContextEventRecord(IHoarwellContext Context, bool IsActive);
+
+    /// <summary>
+    /// 基于 connector 的本地端点特征
+    /// </summary>
+    /// <param name="connectorsGetDelegate"></param>
+    protected class DynamicConnectorsLocalEndPointsFeature(Func<IEnumerable<IDuplexPipeConnector<TInputter, TOutputter>>?> connectorsGetDelegate) : ILocalEndPointsFeature
+    {
+        #region Public 属性
+
+        /// <inheritdoc/>
+        public IEnumerable<EndPoint> EndPoints => connectorsGetDelegate()?.Select(static m => m.Features.Get<ILocalEndPointFeature>())
+                                                                         .Select(static m => m?.EndPoint)
+                                                                         .Where(static m => m != null)
+                                                                         .Select(static m => m!)
+                                                  ?? Array.Empty<EndPoint>();
+
+        #endregion Public 属性
+    }
 
     #endregion Protected 类型
 }

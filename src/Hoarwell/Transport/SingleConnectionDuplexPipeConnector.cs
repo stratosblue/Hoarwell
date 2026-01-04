@@ -24,7 +24,7 @@ public abstract class SingleConnectionDuplexPipeConnector<TInputter, TOutputter>
     #region Public 属性
 
     /// <inheritdoc/>
-    public virtual IFeatureCollection Features { get; } = new ConcurrentFeatureCollection();
+    public virtual IFeatureCollection Features { get; } = ImmutableFeatureCollection.Empty;
 
     #endregion Public 属性
 

@@ -15,7 +15,7 @@ internal class DuplexPipeConnectionListenerConnector : IDuplexPipeConnector<Pipe
 
     #region Public 属性
 
-    public IFeatureCollection Features => throw new NotImplementedException();
+    public IFeatureCollection Features { get; }
 
     #endregion Public 属性
 
@@ -24,6 +24,10 @@ internal class DuplexPipeConnectionListenerConnector : IDuplexPipeConnector<Pipe
     public DuplexPipeConnectionListenerConnector(IConnectionListener connectionListener)
     {
         _connectionListener = connectionListener ?? throw new ArgumentNullException(nameof(connectionListener));
+
+        Features = ImmutableFeatureCollection.Builder()
+                                             .Add<ILocalEndPointFeature>(new LocalEndPointFeature(connectionListener.EndPoint))
+                                             .Build();
     }
 
     #endregion Public 构造函数

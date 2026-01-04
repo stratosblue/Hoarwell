@@ -24,6 +24,13 @@ public class ConcurrentFeatureCollection
 
     #endregion Private 字段
 
+    #region Public 属性
+
+    /// <inheritdoc/>
+    public bool IsReadOnly => false;
+
+    #endregion Public 属性
+
     #region Public 构造函数
 
     /// <inheritdoc cref="ConcurrentFeatureCollection"/>
@@ -57,35 +64,35 @@ public class ConcurrentFeatureCollection
     #region Public 方法
 
     /// <inheritdoc/>
-    public Features? Get<Features>() where Features : class
+    public TFeature? Get<TFeature>() where TFeature : class
     {
-        return _features?.TryGetValue(typeof(Features), out var result) == true
-               ? (Features?)result
-               : _defaults?.Get<Features>();
+        return _features?.TryGetValue(typeof(TFeature), out var result) == true
+               ? (TFeature?)result
+               : _defaults?.Get<TFeature>();
     }
 
     /// <inheritdoc/>
-    public bool Remove<Features>() where Features : class
+    public bool Remove<TFeature>() where TFeature : class
     {
-        return _features?.TryRemove(typeof(Features), out _) == true;
+        return _features?.TryRemove(typeof(TFeature), out _) == true;
     }
 
     /// <inheritdoc/>
-    public void Set<Features>(Features? instance) where Features : class
+    public void Set<TFeature>(TFeature? instance) where TFeature : class
     {
-        EnsureFeatures()[typeof(Features)] = instance;
+        EnsureFeatures()[typeof(TFeature)] = instance;
     }
 
     /// <inheritdoc/>
-    public bool TryGet<Features>(out Features? features) where Features : class
+    public bool TryGet<TFeature>(out TFeature? features) where TFeature : class
     {
         if (_features is null
-            || !_features.TryGetValue(typeof(Features), out var result))
+            || !_features.TryGetValue(typeof(TFeature), out var result))
         {
             features = null;
             return false;
         }
-        features = (Features?)result;
+        features = (TFeature?)result;
         return features != null;
     }
 

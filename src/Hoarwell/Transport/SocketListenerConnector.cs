@@ -28,8 +28,9 @@ public sealed class SocketListenerConnector : IDuplexPipeConnector<Stream, Strea
     {
         ArgumentNullExceptionHelper.ThrowIfNull(socket, nameof(socket));
 
-        Features = new ConcurrentFeatureCollection();
-
+        Features = ImmutableFeatureCollection.Builder()
+                                             .Add<ILocalEndPointFeature>(new LocalEndPointFeature(socket.LocalEndPoint))
+                                             .Build();
         _socket = socket;
     }
 
