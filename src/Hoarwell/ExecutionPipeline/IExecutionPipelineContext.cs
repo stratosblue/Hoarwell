@@ -8,7 +8,7 @@ public interface IExecutionPipelineContext : IDisposable
     #region Public 属性
 
     /// <summary>
-    /// 当前上下文的 <inheritdoc cref="CancellationToken"/>
+    /// 当前上下文已经中止的 <inheritdoc cref="CancellationToken"/>
     /// </summary>
     CancellationToken ExecutionAborted { get; }
 

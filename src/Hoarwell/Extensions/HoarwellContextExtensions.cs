@@ -16,6 +16,18 @@ public static class HoarwellContextExtensions
         return context.Outputter.FlushAsync(cancellationToken);
     }
 
+    /// <summary>
+    /// 从<paramref name="context"/>中获取指定的<typeparamref name="TFeature"/>, 获取失败则抛出异常
+    /// </summary>
+    /// <typeparam name="TFeature"></typeparam>
+    /// <param name="context"></param>
+    /// <returns></returns>
+    /// <exception cref="KeyNotFoundException"></exception>
+    public static TFeature RequiredFeature<TFeature>(this IHoarwellContext context) where TFeature : class
+    {
+        return context.Features.Get<TFeature>() ?? throw new KeyNotFoundException($"Not found {typeof(TFeature)} in feature collection.");
+    }
+
     /// <inheritdoc cref="IOutputter.WriteAndFlushAsync{T}(IHoarwellContext, T, CancellationToken)"/>
     public static Task WriteAndFlushAsync<T>(this IHoarwellContext context, T message, CancellationToken cancellationToken = default)
     {

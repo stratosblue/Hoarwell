@@ -17,7 +17,7 @@ public static class IFeatureCollectionExtensions
     /// <param name="features"></param>
     /// <returns></returns>
     /// <exception cref="KeyNotFoundException"></exception>
-    public static TFeature Required<TFeature>(this IFeatureCollection features) where TFeature : class
+    public static TFeature RequiredFeature<TFeature>(this IFeatureCollection features) where TFeature : class
     {
         return features.Get<TFeature>() ?? throw new KeyNotFoundException($"Not found {typeof(TFeature)} in feature collection.");
     }

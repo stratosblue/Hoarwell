@@ -8,9 +8,13 @@ internal class TestHoarwellContext : IHoarwellContext
 
     public string ApplicationName { get; }
 
+    public object? CloseReason { get; private set; }
+
     public CancellationToken ExecutionAborted => ExecutionAbortedSource.Token;
 
     public CancellationTokenSource ExecutionAbortedSource { get; } = new();
+
+    public CancellationToken ExecutionAborting => ExecutionAbortedSource.Token;
 
     public IFeatureCollection Features { get; }
 
@@ -37,8 +41,9 @@ internal class TestHoarwellContext : IHoarwellContext
 
     #region Public 方法
 
-    public void Abort()
+    public void Abort(object? reason)
     {
+        CloseReason = reason;
         ExecutionAbortedSource.Cancel();
     }
 

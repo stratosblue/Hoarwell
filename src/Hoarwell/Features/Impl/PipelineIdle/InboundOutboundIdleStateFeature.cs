@@ -209,7 +209,7 @@ public class InboundOutboundIdleStateFeature : IInboundOutboundIdleStateFeature,
     {
         IdleStateTriggered = true;
         TriggeredIdleState = idleState;
-        Context.Abort();
+        Context.Abort(idleState);
         return default;
     }
 

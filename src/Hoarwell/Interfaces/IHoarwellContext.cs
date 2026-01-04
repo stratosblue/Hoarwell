@@ -16,6 +16,16 @@ public interface IHoarwellContext : IExecutionPipelineContext
     string ApplicationName { get; }
 
     /// <summary>
+    /// 当前上下文关闭的原因
+    /// </summary>
+    object? CloseReason { get; }
+
+    /// <summary>
+    /// 当前上下文正在中止的 <inheritdoc cref="CancellationToken"/>
+    /// </summary>
+    CancellationToken ExecutionAborting { get; }
+
+    /// <summary>
     /// 特征集
     /// </summary>
     IFeatureCollection Features { get; }
@@ -32,7 +42,8 @@ public interface IHoarwellContext : IExecutionPipelineContext
     /// <summary>
     /// 中止上下文
     /// </summary>
-    void Abort();
+    /// <param name="reason">中止原因</param>
+    void Abort(object? reason = null);
 
     #endregion Public 方法
 }

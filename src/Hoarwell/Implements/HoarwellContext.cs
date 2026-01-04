@@ -1,4 +1,7 @@
 ﻿using Hoarwell.Features;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Hoarwell;
 
@@ -9,11 +12,21 @@ public class HoarwellContext : IHoarwellContext
 {
     #region Private 字段
 
+    private readonly CancellationTokenSource _abortingCTS = new();
+
     private readonly IPipeLifetimeFeature _pipeLifetimeFeature;
 
     private bool _isDisposed;
 
+    private ILogger? _logger;
+
     #endregion Private 字段
+
+    #region Private 属性
+
+    private ILogger Logger => _logger ??= Services?.GetService<ILoggerFactory>()?.CreateLogger("Hoarwell.HoarwellContext") ?? NullLogger.Instance;
+
+    #endregion Private 属性
 
     #region Public 属性
 
@@ -21,7 +34,13 @@ public class HoarwellContext : IHoarwellContext
     public string ApplicationName { get; }
 
     /// <inheritdoc/>
+    public object? CloseReason { get; private set; }
+
+    /// <inheritdoc/>
     public CancellationToken ExecutionAborted => _pipeLifetimeFeature.PipeClosed;
+
+    /// <inheritdoc/>
+    public CancellationToken ExecutionAborting => _abortingCTS.Token;
 
     /// <inheritdoc/>
     public IFeatureCollection Features { get; }
@@ -52,8 +71,8 @@ public class HoarwellContext : IHoarwellContext
         Features = features;
         Outputter = outputter;
 
-        Services = features.Required<IServiceProviderFeature>().Services;
-        _pipeLifetimeFeature = Features.Required<IPipeLifetimeFeature>();
+        Services = features.RequiredFeature<IServiceProviderFeature>().Services;
+        _pipeLifetimeFeature = Features.RequiredFeature<IPipeLifetimeFeature>();
 
         //HACK 可能出现并发问题
         Properties = new Dictionary<object, object>();
@@ -64,17 +83,39 @@ public class HoarwellContext : IHoarwellContext
     #region Public 方法
 
     /// <inheritdoc/>
-    public void Abort()
+    public void Abort(object? reason)
     {
-        if (!ExecutionAborted.IsCancellationRequested)
+        CloseReason = reason;
+
+        if (Logger.IsEnabled(LogLevel.Information))
         {
-            try
+            Logger.LogInformation("Context is aborting: {Reason}", reason);
+        }
+
+        try
+        {
+            if (!ExecutionAborted.IsCancellationRequested)
             {
+                try
+                {
+                    _abortingCTS.Cancel();
+                }
+                catch (Exception ex)
+                {
+                    if (Logger.IsEnabled(LogLevel.Warning))
+                    {
+                        Logger.LogWarning(ex, "An exception occurred while notify closing");
+                    }
+                }
+
                 _pipeLifetimeFeature.Abort();
             }
-            catch
+        }
+        catch (Exception ex)
+        {
+            if (Logger.IsEnabled(LogLevel.Warning))
             {
-                //静默异常
+                Logger.LogWarning(ex, "An exception occurred while the context pipe was closing");
             }
         }
     }
@@ -106,8 +147,14 @@ public class HoarwellContext : IHoarwellContext
     {
         if (!_isDisposed)
         {
-            Abort();
+            if (disposing)
+            {
+                Abort("Context disposing");
+            }
+
             Outputter.Dispose();
+            _abortingCTS.Dispose();
+
             _isDisposed = true;
         }
     }

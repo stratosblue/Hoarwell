@@ -31,7 +31,7 @@ public class DefaultHoarwellApplication<TInputter, TOutputter> : DefaultHoarwell
     /// <inheritdoc/>
     public override ValueTask<HoarwellContext> CreateContext(IFeatureCollection features)
     {
-        var duplexPipeFeature = features.Required<IDuplexPipeFeature<TInputter, TOutputter>>();
+        var duplexPipeFeature = features.RequiredFeature<IDuplexPipeFeature<TInputter, TOutputter>>();
 
         var adaptedOutputter = OutputterAdapter.Adapt(duplexPipeFeature.Outputter, SerializeOutboundMessageDelegate);
 
