@@ -86,6 +86,8 @@ public abstract class Outputter : IOutputter
     /// <inheritdoc/>
     public virtual async Task WriteAndFlushAsync<T>(IHoarwellContext context, T message, CancellationToken cancellationToken = default)
     {
+        ThrowIfDisposed();
+
         var bufferWriter = CreateBufferWriter();
         try
         {
@@ -107,6 +109,8 @@ public abstract class Outputter : IOutputter
     /// <inheritdoc/>
     public virtual async Task WriteAsync<T>(IHoarwellContext context, T message, CancellationToken cancellationToken = default)
     {
+        ThrowIfDisposed();
+
         var bufferWriter = CreateBufferWriter();
         try
         {

@@ -16,7 +16,9 @@ public class HoarwellContext : IHoarwellContext
 
     private readonly IPipeLifetimeFeature _pipeLifetimeFeature;
 
-    private bool _isDisposed;
+    private volatile bool _isAborting = false;
+
+    private volatile bool _isDisposed = false;
 
     private ILogger? _logger;
 
@@ -85,38 +87,54 @@ public class HoarwellContext : IHoarwellContext
     /// <inheritdoc/>
     public void Abort(object? reason)
     {
-        CloseReason = reason;
-
-        if (Logger.IsEnabled(LogLevel.Information))
+        if (_isAborting)
         {
-            Logger.LogInformation("Context is aborting: {Reason}", reason);
+            return;
         }
+
+        _isAborting = true;
 
         try
         {
-            if (!ExecutionAborted.IsCancellationRequested)
+            CloseReason = reason;
+
+            if (Logger.IsEnabled(LogLevel.Information))
             {
-                try
+                Logger.LogInformation("Context is aborting: {Reason}", reason);
+            }
+
+            try
+            {
+                if (!ExecutionAborted.IsCancellationRequested)
                 {
-                    _abortingCTS.Cancel();
-                }
-                catch (Exception ex)
-                {
-                    if (Logger.IsEnabled(LogLevel.Warning))
+                    try
                     {
-                        Logger.LogWarning(ex, "An exception occurred while notify closing");
+                        _abortingCTS.Cancel();
                     }
+                    catch (Exception ex)
+                    {
+                        if (Logger.IsEnabled(LogLevel.Warning))
+                        {
+                            Logger.LogWarning(ex, "An exception occurred while notify closing");
+                        }
+                    }
+
+                    _pipeLifetimeFeature.Abort();
                 }
 
-                _pipeLifetimeFeature.Abort();
+                Dispose(false);
+            }
+            catch (Exception ex)
+            {
+                if (Logger.IsEnabled(LogLevel.Warning))
+                {
+                    Logger.LogWarning(ex, "An exception occurred while the context pipe was closing");
+                }
             }
         }
-        catch (Exception ex)
+        finally
         {
-            if (Logger.IsEnabled(LogLevel.Warning))
-            {
-                Logger.LogWarning(ex, "An exception occurred while the context pipe was closing");
-            }
+            _isAborting = false;
         }
     }
 
@@ -145,18 +163,21 @@ public class HoarwellContext : IHoarwellContext
     /// <param name="disposing"></param>
     protected virtual void Dispose(bool disposing)
     {
-        if (!_isDisposed)
+        if (_isDisposed
+            || _isAborting)
         {
-            if (disposing)
-            {
-                Abort("Context disposing");
-            }
-
-            Outputter.Dispose();
-            _abortingCTS.Dispose();
-
-            _isDisposed = true;
+            return;
         }
+
+        if (disposing)
+        {
+            Abort("Context disposing");
+        }
+
+        Outputter.Dispose();
+        _abortingCTS.Dispose();
+
+        _isDisposed = true;
     }
 
     #endregion IDisposable

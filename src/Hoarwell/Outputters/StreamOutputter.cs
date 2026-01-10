@@ -26,12 +26,16 @@ internal sealed class StreamOutputter : Outputter
 
     public override async Task WriteAndFlushAsync(ReadOnlyMemory<byte> rawMessage, CancellationToken cancellationToken = default)
     {
+        ThrowIfDisposed();
+
         await _stream.WriteAsync(rawMessage, cancellationToken).ConfigureAwait(false);
         await _stream.FlushAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public override ValueTask WriteAsync(ReadOnlyMemory<byte> rawMessage, CancellationToken cancellationToken = default)
     {
+        ThrowIfDisposed();
+
         return _stream.WriteAsync(rawMessage, cancellationToken);
     }
 
