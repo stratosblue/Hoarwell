@@ -286,6 +286,7 @@ public abstract class HoarwellApplicationRunner<TContext, TApplication, TInputte
     protected virtual async Task RunApplicationAsync(IHoarwellApplication<TContext, TInputter, TOutputter> application, IDuplexPipeContext<TInputter, TOutputter> duplexPipeContext)
     {
         TContext? context = default;
+        Exception? exception = default;
         try
         {
             var features = new ConcurrentFeatureCollection(duplexPipeContext.Features);
@@ -308,6 +309,8 @@ public abstract class HoarwellApplicationRunner<TContext, TApplication, TInputte
         }
         catch (Exception ex)
         {
+            exception = ex;
+
             if (ex is OperationCanceledException or IOException or SocketException
                 && context?.ExecutionAborted.IsCancellationRequested == true)
             {
@@ -321,6 +324,7 @@ public abstract class HoarwellApplicationRunner<TContext, TApplication, TInputte
         {
             if (context is not null)
             {
+                context.Abort(exception);
                 FireContextInactive(context);
                 await application.DisposeContext(context).ConfigureAwait(false);
             }
