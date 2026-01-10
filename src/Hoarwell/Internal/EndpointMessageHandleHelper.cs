@@ -9,10 +9,10 @@ internal static class EndpointMessageHandleHelper
     #region Public 方法
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Task HandleMessageAsync<TMessage, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TMessageHandelr>(IHoarwellContext context, InboundMetadata input)
-         where TMessageHandelr : IEndpointMessageHandler<TMessage>
+    public static Task HandleMessageAsync<TMessage, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TMessageHandler>(IHoarwellContext context, InboundMetadata input)
+         where TMessageHandler : IEndpointMessageHandler<TMessage>
     {
-        var messageHandler = context.Services.GetRequiredKeyedService<TMessageHandelr>(context.ApplicationName);
+        var messageHandler = context.Services.GetRequiredKeyedService<TMessageHandler>(context.ApplicationName);
 
         return messageHandler.HandleAsync(context, (TMessage?)input.Value);
     }
