@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Net.Sockets;
 using System.Threading.Channels;
 using Hoarwell.Features;
@@ -285,20 +286,22 @@ public abstract class HoarwellApplicationRunner<TContext, TApplication, TInputte
     /// <returns></returns>
     protected virtual async Task RunApplicationAsync(IHoarwellApplication<TContext, TInputter, TOutputter> application, IDuplexPipeContext<TInputter, TOutputter> duplexPipeContext)
     {
+        await using var serviceScope = ServiceScopeFactory.CreateAsyncScope();
+        var serviceProvider = serviceScope.ServiceProvider;
+
         TContext? context = default;
         Exception? exception = default;
+
         try
         {
             var features = new ConcurrentFeatureCollection(duplexPipeContext.Features);
 
-            await using var serviceScope = ServiceScopeFactory.CreateAsyncScope();
-
-            features.Set<IServiceProviderFeature>(new PipeServiceProviderFeature(serviceScope.ServiceProvider));
+            features.Set<IServiceProviderFeature>(new PipeServiceProviderFeature(serviceProvider));
             features.Set<IDuplexPipeFeature<TInputter, TOutputter>>(duplexPipeContext);
 
             context = await application.CreateContext(features).ConfigureAwait(false);
 
-            if (serviceScope.ServiceProvider.GetService<HoarwellContextAccessor>() is { } contextAccessor)
+            if (serviceProvider.GetService<HoarwellContextAccessor>() is { } contextAccessor)
             {
                 contextAccessor.Context = context;
             }
