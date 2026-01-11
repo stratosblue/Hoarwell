@@ -87,7 +87,8 @@ public class HoarwellContext : IHoarwellContext
     /// <inheritdoc/>
     public void Abort(object? reason)
     {
-        if (_isAborting)
+        if (_isDisposed
+            || _isAborting)
         {
             return;
         }
@@ -122,7 +123,7 @@ public class HoarwellContext : IHoarwellContext
                     _pipeLifetimeFeature.Abort();
                 }
 
-                Dispose(false);
+                Dispose(false, false);
             }
             catch (Exception ex)
             {
@@ -161,15 +162,16 @@ public class HoarwellContext : IHoarwellContext
     ///
     /// </summary>
     /// <param name="disposing"></param>
-    protected virtual void Dispose(bool disposing)
+    /// <param name="abort"></param>
+    protected virtual void Dispose(bool disposing, bool abort = true)
     {
-        if (_isDisposed
-            || _isAborting)
+        if (_isDisposed)
         {
             return;
         }
 
-        if (disposing)
+        if (disposing
+            && abort)
         {
             Abort("Context disposing");
         }

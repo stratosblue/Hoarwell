@@ -34,7 +34,11 @@ public static class SocketDuplexPipeContextHelper
             var context = new SocketConnectionContext<PipeReader, PipeWriter>(socket: socket,
                                                                               inputter: pipeReader,
                                                                               outputter: pipeWriter,
-                                                                              lifetimeFeature: new DelegatingPipeLifetimeFeature(socket.Close, cts.Token),
+                                                                              lifetimeFeature: new DelegatingPipeLifetimeFeature(() =>
+                                                                              {
+                                                                                  socket.Close();
+                                                                                  cts.SilenceRelease();
+                                                                              }, cts.Token),
                                                                               disposeCallback: cts.Dispose);
 
             context.Features.Set<IPipeEndPointFeature>(new PipeEndPointFeature(socket.LocalEndPoint!, socket.RemoteEndPoint!));
@@ -68,7 +72,11 @@ public static class SocketDuplexPipeContextHelper
             var context = new SocketConnectionContext<ReadOnlySocketStream, WriteOnlySocketStream>(socket: socket,
                                                                                                    inputter: readStream,
                                                                                                    outputter: writeStream,
-                                                                                                   lifetimeFeature: new DelegatingPipeLifetimeFeature(socket.Close, cts.Token),
+                                                                                                   lifetimeFeature: new DelegatingPipeLifetimeFeature(() =>
+                                                                                                   {
+                                                                                                       socket.Close();
+                                                                                                       cts.SilenceRelease();
+                                                                                                   }, cts.Token),
                                                                                                    disposeCallback: cts.Dispose);
 
             context.Features.Set<IPipeEndPointFeature>(new PipeEndPointFeature(socket.LocalEndPoint!, socket.RemoteEndPoint!));

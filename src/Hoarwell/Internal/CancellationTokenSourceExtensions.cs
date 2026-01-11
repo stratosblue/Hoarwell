@@ -16,7 +16,10 @@ internal static class CancellationTokenSourceExtensions
         }
         try
         {
-            cancellationTokenSource.Cancel();
+            if (!cancellationTokenSource.IsCancellationRequested)
+            {
+                cancellationTokenSource.Cancel();
+            }
         }
         catch { }
         finally

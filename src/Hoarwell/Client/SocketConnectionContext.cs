@@ -17,6 +17,8 @@ internal class SocketConnectionContext<TReader, TWriter> : IDuplexPipeContext<TR
 
     private int _disposed = 0;
 
+    private readonly IPipeLifetimeFeature _lifetimeFeature;
+
     #endregion Private 字段
 
     #region Public 属性
@@ -42,7 +44,7 @@ internal class SocketConnectionContext<TReader, TWriter> : IDuplexPipeContext<TR
         _socket = socket;
         Inputter = inputter;
         Outputter = outputter;
-
+        _lifetimeFeature = lifetimeFeature;
         _disposeCallback = disposeCallback;
 
         Features = new ConcurrentFeatureCollection();
@@ -58,6 +60,7 @@ internal class SocketConnectionContext<TReader, TWriter> : IDuplexPipeContext<TR
     public void Abort()
     {
         _socket.Close();
+        _lifetimeFeature.Abort();
     }
 
     public ValueTask DisposeAsync()
