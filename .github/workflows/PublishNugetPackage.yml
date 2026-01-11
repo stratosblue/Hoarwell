@@ -1,9 +1,12 @@
 ﻿name: Publish Nuget Package
 
 on:
-  release:
-    types: [ released, prereleased ]
-    branches: [ main ]
+  push:
+    tags:        
+      - v*.*.**
+# release:
+#   types: [ released, prereleased ]
+#   branches: [ main ]
 
 jobs:
   publish-with-build:
