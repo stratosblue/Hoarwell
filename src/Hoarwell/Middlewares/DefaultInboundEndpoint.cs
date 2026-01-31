@@ -92,7 +92,7 @@ internal sealed class DefaultInboundEndpoint<TContext>
             {
                 try
                 {
-                    context.Abort($"No handler for input: {input}");
+                    context.Abort($"Error at handle input: {input}");
                 }
                 catch (Exception innerEx)
                 {
