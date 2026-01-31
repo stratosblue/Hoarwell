@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using System.Net.Sockets;
 using System.Threading.Channels;
 using Hoarwell.Features;
@@ -279,6 +278,16 @@ public abstract class HoarwellApplicationRunner<TContext, TApplication, TInputte
     }
 
     /// <summary>
+    /// 在连接循环异常时
+    /// </summary>
+    /// <param name="connector"></param>
+    /// <param name="exception"></param>
+    protected virtual Task OnConnectLoopErrorAsync(IDuplexPipeConnector<TInputter, TOutputter> connector, Exception exception)
+    {
+        return Task.CompletedTask;
+    }
+
+    /// <summary>
     /// 运行应用程序
     /// </summary>
     /// <param name="application"></param>
@@ -369,6 +378,8 @@ public abstract class HoarwellApplicationRunner<TContext, TApplication, TInputte
             {
                 Logger.LogError(disposeEx, "An error occurred while dispose the error duplex pipe connector {Connector}", connector);
             }
+
+            await OnConnectLoopErrorAsync(connector, ex).ConfigureAwait(false);
         }
     }
 

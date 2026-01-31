@@ -74,8 +74,7 @@ public static class HoarwellServiceCollectionExtensions
 
         var services = builder.Services;
 
-        services.TryAdd(ServiceDescriptor.DescribeKeyed(typeof(TApplication), serviceKey: builder.ApplicationName, typeof(TApplication), lifetime));
-        services.TryAdd(ServiceDescriptor.DescribeKeyed(typeof(IHoarwellApplication<TContext, TInputter, TOutputter>), builder.ApplicationName, typeof(TApplication), lifetime));
+        builder.UseApplicationCore<TContext, TApplication, TInputter, TOutputter>();
 
         services.TryAdd(ServiceDescriptor.DescribeKeyed(typeof(IHoarwellApplicationRunner), builder.ApplicationName, typeof(DefaultHoarwellApplicationRunner<TContext, TApplication, TInputter, TOutputter>), lifetime));
 
@@ -102,6 +101,64 @@ public static class HoarwellServiceCollectionExtensions
     public static HoarwellBuilder<HoarwellContext, Stream, Stream> UseDefaultStreamApplication(this HoarwellBuilder builder, ServiceLifetime lifetime = ServiceLifetime.Singleton)
     {
         return builder.UseApplication<HoarwellContext, DefaultHoarwellApplication<Stream, Stream>, Stream, Stream>(lifetime);
+    }
+
+    /// <summary>
+    /// 使用默认瞬态应用程序 <see cref="DefaultHoarwellApplication{TInputter, TOutputter}"/>
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <returns></returns>
+    public static HoarwellBuilder<HoarwellContext, PipeReader, PipeWriter> UseDefaultTransientApplication(this HoarwellBuilder builder)
+    {
+        return builder.UseTransientApplication<HoarwellContext, DefaultHoarwellApplication<PipeReader, PipeWriter>, PipeReader, PipeWriter>();
+    }
+
+    /// <summary>
+    /// 使用默认瞬态应用程序 <see cref="DefaultHoarwellApplication{TInputter, TOutputter}"/>
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <returns></returns>
+    public static HoarwellBuilder<HoarwellContext, Stream, Stream> UseDefaultTransientStreamApplication(this HoarwellBuilder builder)
+    {
+        return builder.UseTransientApplication<HoarwellContext, DefaultHoarwellApplication<Stream, Stream>, Stream, Stream>();
+    }
+
+    /// <summary>
+    /// 使用瞬态应用程序 <typeparamref name="TApplication"/>. 该应用程序上下文类型为 <typeparamref name="TContext"/>, 输入器类型为 <typeparamref name="TInputter"/>, 输出器类型为 <typeparamref name="TOutputter"/>
+    /// </summary>
+    /// <typeparam name="TContext"></typeparam>
+    /// <typeparam name="TApplication"></typeparam>
+    /// <typeparam name="TInputter"></typeparam>
+    /// <typeparam name="TOutputter"></typeparam>
+    /// <param name="builder"></param>
+    /// <returns></returns>
+    public static HoarwellBuilder<TContext, TInputter, TOutputter> UseTransientApplication<TContext, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TApplication, TInputter, TOutputter>(this HoarwellBuilder builder)
+        where TContext : IHoarwellContext
+        where TApplication : IHoarwellApplication<TContext, TInputter, TOutputter>
+    {
+        ArgumentNullExceptionHelper.ThrowIfNull(builder);
+
+        var services = builder.Services;
+
+        builder.UseApplicationCore<TContext, TApplication, TInputter, TOutputter>(ServiceLifetime.Transient);
+
+        services.TryAdd(ServiceDescriptor.DescribeKeyed(typeof(IHoarwellApplicationRunner), builder.ApplicationName, typeof(DefaultTransientHoarwellApplicationRunner<TContext, TApplication, TInputter, TOutputter>), ServiceLifetime.Transient));
+
+        return new HoarwellBuilder<TContext, TInputter, TOutputter>(builder);
+    }
+
+    private static HoarwellBuilder<TContext, TInputter, TOutputter> UseApplicationCore<TContext, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TApplication, TInputter, TOutputter>(this HoarwellBuilder builder, ServiceLifetime lifetime = ServiceLifetime.Singleton)
+        where TContext : IHoarwellContext
+        where TApplication : IHoarwellApplication<TContext, TInputter, TOutputter>
+    {
+        ArgumentNullExceptionHelper.ThrowIfNull(builder);
+
+        var services = builder.Services;
+
+        services.TryAdd(ServiceDescriptor.DescribeKeyed(typeof(TApplication), serviceKey: builder.ApplicationName, typeof(TApplication), lifetime));
+        services.TryAdd(ServiceDescriptor.DescribeKeyed(typeof(IHoarwellApplication<TContext, TInputter, TOutputter>), builder.ApplicationName, typeof(TApplication), lifetime));
+
+        return new HoarwellBuilder<TContext, TInputter, TOutputter>(builder);
     }
 
     #endregion Application

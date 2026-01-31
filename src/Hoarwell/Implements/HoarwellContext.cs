@@ -20,13 +20,11 @@ public class HoarwellContext : IHoarwellContext
 
     private volatile bool _isDisposed = false;
 
-    private ILogger? _logger;
-
     #endregion Private 字段
 
     #region Private 属性
 
-    private ILogger Logger => _logger ??= Services?.GetService<ILoggerFactory>()?.CreateLogger("Hoarwell.HoarwellContext") ?? NullLogger.Instance;
+    private ILogger Logger { get; }
 
     #endregion Private 属性
 
@@ -74,6 +72,8 @@ public class HoarwellContext : IHoarwellContext
         Outputter = outputter;
 
         Services = features.RequiredFeature<IServiceProviderFeature>().Services;
+        Logger = Services.GetService<ILoggerFactory>()?.CreateLogger("Hoarwell.HoarwellContext") ?? NullLogger.Instance;
+
         _pipeLifetimeFeature = Features.RequiredFeature<IPipeLifetimeFeature>();
 
         //HACK 可能出现并发问题

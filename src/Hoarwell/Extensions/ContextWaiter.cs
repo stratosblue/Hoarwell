@@ -11,6 +11,8 @@ public sealed class ContextWaiter : IDisposable
 
     private readonly IHoarwellApplicationRunner _applicationRunner;
 
+    private readonly CancellationTokenRegistration _cancellationTokenRegistration;
+
     private readonly TaskCompletionSource<IHoarwellContext> _taskCompletionSource = new(TaskCreationOptions.RunContinuationsAsynchronously);
 
     #endregion Private 字段
@@ -33,6 +35,12 @@ public sealed class ContextWaiter : IDisposable
 
         _applicationRunner = applicationRunner;
         _applicationRunner.OnContextActive += OnApplicationRunnerContextActive;
+
+        _cancellationTokenRegistration = applicationRunner.ApplicationStopping.Register(static state =>
+        {
+            var waiter = (ContextWaiter)state!;
+            waiter._taskCompletionSource.TrySetCanceled(waiter._applicationRunner.ApplicationStopping);
+        }, this);
     }
 
     #endregion Public 构造函数
@@ -71,6 +79,7 @@ public sealed class ContextWaiter : IDisposable
         {
             _applicationRunner.OnContextActive -= OnApplicationRunnerContextActive;
             _taskCompletionSource.TrySetCanceled();
+            _cancellationTokenRegistration.Dispose();
             GC.SuppressFinalize(this);
         }
     }

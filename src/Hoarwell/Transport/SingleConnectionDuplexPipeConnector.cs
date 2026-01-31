@@ -73,8 +73,6 @@ public abstract class SingleConnectionDuplexPipeConnector<TInputter, TOutputter>
     /// <inheritdoc/>
     public virtual ValueTask StopAsync(CancellationToken cancellationToken = default)
     {
-        ThrowIfDisposed();
-
         _blockTokenSource.SilenceRelease();
         return default;
     }
