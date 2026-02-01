@@ -41,9 +41,21 @@ public abstract class SingletonSocketBaseDuplexPipeConnector<TInputter, TOutputt
     /// <returns></returns>
     protected virtual async Task<Socket> ConnectSocketAsync(CancellationToken cancellationToken = default)
     {
-        var socket = SocketCreateFactory(RemoteEndPoint);
-        await socket.ConnectAsync(RemoteEndPoint).ConfigureAwait(false);
+        var endPoint = await ResolveRemoteEndPointAsync(RemoteEndPoint, cancellationToken).ConfigureAwait(false);
+        var socket = SocketCreateFactory(endPoint);
+        await socket.ConnectAsync(endPoint).ConfigureAwait(false);
         return socket;
+    }
+
+    /// <summary>
+    /// 处理远程端点
+    /// </summary>
+    /// <param name="endPoint"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    protected virtual Task<EndPoint> ResolveRemoteEndPointAsync(EndPoint endPoint, CancellationToken cancellationToken = default)
+    {
+        return EndPointResolveHelper.ResolveForSocketAsync(endPoint, cancellationToken);
     }
 
     #endregion Protected 方法

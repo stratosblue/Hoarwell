@@ -23,9 +23,31 @@ public class CommunicationSocketServerBaseTest
     [DataRow(6)]
     [DataRow(7)]
     [DataRow(8)]
-    public async Task ShouldEchoSucceedAsync(int lengthDataSize)
+    public Task ShouldEchoSucceed_DnsEndPointAsync(int lengthDataSize)
     {
-        EndPoint endpoint = IPEndPoint.Parse("127.0.0.1:0");
+        return ShouldEchoSucceedAsync(new DnsEndPoint("localhost", 0), lengthDataSize);
+    }
+
+    [TestMethod]
+    [DataRow(1)]
+    [DataRow(2)]
+    [DataRow(3)]
+    [DataRow(4)]
+    [DataRow(5)]
+    [DataRow(6)]
+    [DataRow(7)]
+    [DataRow(8)]
+    public Task ShouldEchoSucceed_IPEndPointAsync(int lengthDataSize)
+    {
+        return ShouldEchoSucceedAsync(IPEndPoint.Parse("127.0.0.1:0"), lengthDataSize);
+    }
+
+    #endregion Public 方法
+
+    #region Protected 方法
+
+    protected async Task ShouldEchoSucceedAsync(EndPoint endpoint, int lengthDataSize)
+    {
         var serverRunnerInfo = await InitServer(endpoint, lengthDataSize);
         await serverRunnerInfo.Runner.StartAsync();
 
@@ -52,7 +74,7 @@ public class CommunicationSocketServerBaseTest
         }
     }
 
-    #endregion Public 方法
+    #endregion Protected 方法
 
     #region Private 方法
 

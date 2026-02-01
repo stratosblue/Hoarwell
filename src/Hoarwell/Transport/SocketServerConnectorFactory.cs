@@ -3,6 +3,7 @@ using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using Hoarwell.Options;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace Hoarwell.Transport;
@@ -16,6 +17,8 @@ public class SocketServerConnectorFactory : IDuplexPipeConnectorFactory<Stream, 
 
     private readonly IReadOnlyList<EndPoint> _endPoints;
 
+    private readonly ILogger _logger;
+
     private readonly SocketCreateDelegate _socketCreateDelegate;
 
     #endregion Private 字段
@@ -26,10 +29,12 @@ public class SocketServerConnectorFactory : IDuplexPipeConnectorFactory<Stream, 
     public SocketServerConnectorFactory([ServiceKey] string applicationName,
                                         IOptionsMonitor<HoarwellEndPointOptions> endPointOptionsMonitor,
                                         IOptionsMonitor<SocketCreateOptions> socketCreateOptionsMonitor,
-                                        IServiceProvider serviceProvider)
+                                        IServiceProvider serviceProvider,
+                                        ILogger<SocketServerConnectorFactory> logger)
     {
         ArgumentNullExceptionHelper.ThrowIfNull(applicationName, nameof(applicationName));
         ArgumentNullExceptionHelper.ThrowIfNull(serviceProvider, nameof(serviceProvider));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
         var endPoints = endPointOptionsMonitor.GetRequiredApplicationOptions(applicationName, m => m.EndPoints);
 
@@ -54,11 +59,13 @@ public class SocketServerConnectorFactory : IDuplexPipeConnectorFactory<Stream, 
     {
         foreach (var endPoint in _endPoints)
         {
-            var socket = _socketCreateDelegate(endPoint);
+            var resolvedEndPoint = await ResolveEndPointAsync(endPoint, cancellationToken).ConfigureAwait(false);
+
+            var socket = _socketCreateDelegate(resolvedEndPoint);
 
             try
             {
-                socket.Bind(endPoint);
+                socket.Bind(resolvedEndPoint);
 
                 //TODO backlog optionable
                 socket.Listen(int.MaxValue);
@@ -74,4 +81,32 @@ public class SocketServerConnectorFactory : IDuplexPipeConnectorFactory<Stream, 
     }
 
     #endregion Public 方法
+
+    #region Protected 方法
+
+    /// <summary>
+    /// 处理端点
+    /// </summary>
+    /// <param name="endPoint"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    protected virtual async Task<EndPoint> ResolveEndPointAsync(EndPoint endPoint, CancellationToken cancellationToken = default)
+    {
+        _logger.LogDebug("Starting resolve endpoint {EndPoint}.", endPoint);
+
+        var result = await EndPointResolveHelper.ResolveForSocketAsync(endPoint, cancellationToken).ConfigureAwait(false);
+
+        if (result != endPoint)
+        {
+            _logger.LogInformation("Endpoint {EndPoint} resolved as {NewValue}.", endPoint, result);
+        }
+        else
+        {
+            _logger.LogDebug("Endpoint {EndPoint} does not need to be resolved.", endPoint);
+        }
+
+        return result;
+    }
+
+    #endregion Protected 方法
 }
